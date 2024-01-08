@@ -8,7 +8,6 @@ import DashBoard from "../pages/Admin/DashBoard.jsx";
 import ProtectedByAdmin from "./Protected/ProtectedByAdmin.jsx";
 import RegisterChannel from "../pages/SignUp/ChannelRegister.jsx";
 import ArticleList from "../pages/Article/ArticlesList.jsx"
-import Notifications from "../pages/Notification/Notifications.jsx"
 import ChannelsList from "../pages/Channel/ChannelsList.jsx"
 import Login from "../pages/Login/Login.jsx"
 import ChannelProfile from "../pages/Channel/ChannelProfile.jsx"
@@ -31,7 +30,6 @@ const Router = () => {
       {/* protected routes by login user */}
       <Route element={<ProtectedByUser />}>
         <Route exact path="/articles" element={<ArticleList />} />
-        <Route exact path="/notifications" element={<Notifications />} />
         <Route exact path="/channels" element={<ChannelsList />} />
         <Route exact path="/channels/:id" element={<ChannelProfile />} />
         <Route exact path="/articles/:id" element={<ArticleDetailsPage />} />
