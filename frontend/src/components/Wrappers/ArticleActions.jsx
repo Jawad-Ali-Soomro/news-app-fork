@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { FaHeart, FaRegHeart } from "react-icons/fa";
-import ShareButtons from "../../Components/Wrappers/ShareButtons.jsx";
+import ShareButtons from "../../components/Wrappers/ShareButtons.jsx";
 
 const ArticleActions = ({ likeCount, isLiked, handleLike, handleDisLike }) => {
   return (
