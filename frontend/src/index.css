@@ -1,0 +1,92 @@
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto&display=swap");
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
+* {
+  transition: 0.3s !important;
+  outline: none;
+  font-family: "Roboto", sans-serif !important;
+}
+
+body {
+  overflow-x: hidden;
+}
+.filters::-webkit-scrollbar {
+  height: 0px;
+}
+::-webkit-scrollbar {
+  width: 8px;
+  height: 3px;
+}
+::-webkit-scrollbar-thumb {
+  border-radius: 2px;
+  width: 2px;
+  background-color: rgb(187, 87, 87);
+}
+
+
+::-webkit-scrollbar {
+  display: none;
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none;
+}
+
+.topbar {
+  position: sticky;
+  top: 0px;
+  z-index: 49;
+  color: rgb(57, 28, 204);
+}
+
+@layer base {
+  :root {
+    --color-bg: 227 227 227;
+    --color-primary: 255 255 255;
+    --color-secondary: 255 255 255;
+    --color-ascent1: 0 0 0;
+    --color-ascent2: 89 91 100;
+    --color-blue: 6 90 216;
+    --color-white: 255 255 255;
+    --color-input: 225 225 225;
+    --color-purple: 122 10 195;
+    --color-hover-purple: 104 8 178;
+  }
+  /* //15 23 42  21 30 49*/
+  [data-theme="dark"] {
+    --color-bg: 12 12 12;
+    --color-primary: 31 31 31;
+    --color-secondary: 47 45 48;
+    --color-ascent1: 255 255 255;
+    --color-ascent2: 164 161 162;
+    --color-blue: 6 90 216;
+    /* //16 176 255; */
+    --color-white: 255 255 255;
+    --color-input: 0 0 0;
+  }
+}
+
+/* @font-face {
+font-family: "Gordita";
+src: local("Gordita"),
+ url("../src/Font/Gordita-Font/Gordita-Regular.otf") format("truetype");
+  font-weight: bold;
+}
+@font-face {
+font-family: "Gordita-Bold";
+src: local("Gordita"),
+ url("../src/Font/Gordita-Font/Gordita-Black.otf") format("truetype");
+  font-weight: bold;
+}
+
+
+:root {
+  font-family: "Gordita";
+} */
+
+:root {
+  font-family: poppins;
+}
