@@ -19,6 +19,13 @@ const SignUp = () => {
     formState: { errors },
   } = useForm();
 
+  
+  const borderVariants = {
+    hidden: { opacity: 0, scale: 0 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+  };
+
+
   const [submitStatus, setSubmitStatus] = useState({
     loading: false,
     error: false,
@@ -54,10 +61,9 @@ const SignUp = () => {
   return (
     <React.Fragment>
       <motion.div
-        initial={{ opacity: 0, x: -600, y: 0 }}
-        animate={{ opacity: 1, x: 0, y: 0 }}
-        exit={{ opacity: 0, x: 0, y: -50 }}
-        transition={{ duration: 0.4 }}
+        initial="hidden"
+        animate="visible"
+        variants={borderVariants}
       >
         <div className="flex min-h-full flex-col justify-center px-6 py-3 lg:px-2">
           <div className="sm:mx-auto sm:w-full sm:max-w-sm">

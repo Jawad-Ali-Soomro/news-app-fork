@@ -9,8 +9,17 @@ import { login } from "../../store/slices/auth.slice.js";
 import AuthRelatedLinks from "../../components/Wrappers/AuthRelatedLinks";
 import Button from "../../components/UI/Button";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
+
 const RegisterChannel = () => {
   const [files,setFiles]=useState({profileImage:null,coverImage:null});
+
+  const borderVariants = {
+    hidden: { opacity: 0, scale: 0 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.5 } },
+  };
+
+
   const navigate=useNavigate();
   const dispatch = useDispatch();
   const {
@@ -54,6 +63,13 @@ const submitHandler = async (data, event) => {
 
   return (
     <React.Fragment>
+
+<motion.div
+       
+          initial="hidden"
+          animate="visible"
+          variants={borderVariants}
+        >
 
 
       <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
@@ -180,6 +196,7 @@ const submitHandler = async (data, event) => {
           </div>
         </div>
       </div>
+      </motion.div>
     </React.Fragment>
   );
 };

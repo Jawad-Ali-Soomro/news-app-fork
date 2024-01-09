@@ -47,10 +47,12 @@ const Login = () => {
     dispatch(loginSlice({ ...response.data.user }));
     navigate("/articles");
   };
+  
   const borderVariants = {
     hidden: { opacity: 0, scale: 0 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.92 } },
   };
+
   return (
     <React.Fragment>
  <motion.div 

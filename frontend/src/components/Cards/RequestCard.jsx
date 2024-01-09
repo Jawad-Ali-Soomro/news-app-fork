@@ -25,6 +25,8 @@ const RequestCard = ({
     setUpdate(prev=> prev+1)
 
   };
+
+
   const handleReject = async () => {
     setIsRejecting(true);
     const response = await rejectRequestByAdmin(_id);
@@ -34,6 +36,7 @@ const RequestCard = ({
     setUpdate(prev=> prev+1)
   };
   return (
+   
     <tr className="border-b">
     <th scope="row" className="text-sm font-normal px-6 py-4 whitespace-nowrap text-left">
       <div className="flex flex-row items-center">

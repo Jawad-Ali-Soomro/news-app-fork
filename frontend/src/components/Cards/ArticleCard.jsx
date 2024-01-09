@@ -2,10 +2,27 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 import Button from "../../components/UI/Button";
 import { timeAgo } from "../../utils/timeStamp";
+import { motion } from "framer-motion";
+
 
 const ArticleCard = ({ _id, title, urlToImage, description, createdAt }) => {
+  
+  const borderVariants = {
+    hidden: { opacity: 0, scale: 0 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.7 } },
+  };
+
+
+
   const navigate = useNavigate();
+
   return (
+    <motion.div
+   
+    initial="hidden"
+    animate="visible"
+    variants={borderVariants}
+  >
     <div className="w-[25rem] rounded overflow-hidden shadow-lg py-2 hover:scale-95">
       <img
         className="w-full h-[9rem] rounded-md"
@@ -30,6 +47,7 @@ const ArticleCard = ({ _id, title, urlToImage, description, createdAt }) => {
         </Button>
       </div>
     </div>
+    </motion.div>
   );
 };
 ArticleCard.propTypes = {

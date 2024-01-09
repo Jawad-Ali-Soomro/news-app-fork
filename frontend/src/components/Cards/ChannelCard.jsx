@@ -4,6 +4,7 @@ import Button from "../UI/Button.jsx";
 import PropTypes from "prop-types";
 import { useState } from "react";
 import { toast } from "react-toastify";
+import { motion } from "framer-motion";
 
 const ChannelCard = ({
   name,
@@ -27,7 +28,18 @@ const ChannelCard = ({
     setHasFollowed(true);
     setIsProgress(false);
   };
+  const borderVariants = {
+    hidden: { opacity: 0, scale: 0 },
+    visible: { opacity: 1, scale: 1, transition: { duration: 0.55 } },
+  };
   return (
+
+   < motion.div
+    initial="hidden"
+    animate="visible"
+    variants={borderVariants}
+  >
+
     <div
       className="w-[25rem] bg-white rounded-md overflow-hidden px-5 shadow-lg py-3"
       onClick={() => navigate(`/channels/${_id}`)}
@@ -66,6 +78,7 @@ const ChannelCard = ({
         </Button>
       </div>
     </div>
+    </motion.div>
   );
 };
 ChannelCard.propTypes = {
