@@ -9,7 +9,7 @@ export const cookieOptions = {
 
 //setup configuration of cors to allow over frontend App Origin to access server
 export const corsOptions = {
-    origin: [FRONTEND_ORIGIN],
+    origin: "*",
     credentials: true,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE"
 };
