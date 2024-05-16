@@ -10,9 +10,6 @@ router.route("/collection/:userId").get(isAuthenticated, fetchUserCollection);
 router.route("/collection/add/:id").post(isAuthenticated, addToCollection);
 
 //remove article from user collection
-router
-    .route("/collection/remove/:id")
-    .delete(isAuthenticated, removeToCollection);
-
+router.route("/collection/remove/:id").delete(isAuthenticated, removeToCollection);
 
 export default router;

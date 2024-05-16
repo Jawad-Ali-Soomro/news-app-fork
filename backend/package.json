@@ -3,17 +3,30 @@
   "version": "1.0.0",
   "description": "",
   "type": "module",
-   "main": " src/server.js",
+  "main": " src/server.js",
   "scripts": {
     "start": "node server.js",
     "dev": "nodemon server.js",
-    "lint": "eslint . --ext js --report-unused-disable-directives --max-warnings 0",
+    "lint": "eslint .",
+    "format": "prettier --log-level warn --write \"src/**/*.js\"",
     "plato": "plato -r -d report src",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint — fix",
+      "prettier — write",
+      "git add"
+    ]
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.2",
@@ -30,8 +43,11 @@
     "nodemailer-express-handlebars": "^6.1.0"
   },
   "devDependencies": {
-    "eslint": "^8.54.0",
+    "eslint": "^8.57.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
     "nodemon": "^3.0.1",
-    "plato": "^1.7.0"
+    "plato": "^1.7.0",
+    "prettier": "^3.2.5"
   }
 }
