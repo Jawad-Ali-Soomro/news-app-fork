@@ -1,7 +1,7 @@
 import { cookieOptions } from "../config/options.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { userTokenGenerator, verifyUserToken } from "../utils/helper.js";
-import CustomError from "../error/CustomError.js";
+import CustomError from "../utils/ApiError.js";
 import notifyEmail from "../mails/notifyEmail.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import {

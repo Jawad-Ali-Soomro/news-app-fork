@@ -7,7 +7,7 @@ import authRouter from "./routes/auth.route.js";
 import userRouter from "./routes/user.route.js";
 import channelRouter from "./routes/channel.route.js";
 import collectionRouter from "./routes/collection.route.js";
-import { handleError } from "./error/errorHandler.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 import { corsOptions } from "./config/options.js";
 
 const app = express();
@@ -36,6 +36,6 @@ app.use((_, res) => {
 });
 
 // apply global error handler
-app.use(handleError);
+app.use(errorHandler);
 
 export default app;

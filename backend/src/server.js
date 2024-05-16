@@ -1,6 +1,6 @@
-import app from "./src/app.js";
+import app from "./app.js";
 import { PORT } from "./src/config/exportEnv.js";
-import connectDB from "./src/database/connection.js";
+import connectDB from "./database/connection.js";
 import process from "node:process";
 
 // connect mongoDB database and listen server on respective PORT

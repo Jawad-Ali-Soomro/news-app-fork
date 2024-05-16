@@ -12,7 +12,7 @@ import {
   findArticlesByQuery,
 } from "../services/article.service.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import CustomError from "../error/CustomError.js";
+import CustomError from "../utils/ApiError.js";
 
 export const allArticles = asyncHandler(async (req, res) => {
   const articles = await findArticles();

@@ -1,9 +1,10 @@
 import { MODE } from "../config/exportEnv.js";
 
-// eslint-disable-next-line no-unused-vars
-export const handleError = (err, req, res, next) => {
-  console.log("In errorHandler, Error has detected !", err);
+export const errorHandler = (err, req, res, next) => {
+  console.log("Error has detected in error handler middleware !", err);
   err.statusCode = err.statusCode || 500;
+  err.message = err.message || "Something went wrong Please try again";
+
   if (MODE !== "PRODUCTION") {
     res.status(err.statusCode).json({
       success: false,

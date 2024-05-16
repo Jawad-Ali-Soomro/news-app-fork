@@ -1,7 +1,8 @@
-/* eslint-disable no-undef */
-// eslint-disable-next-line no-unused-vars
 import dotenv from "dotenv";
+import process from "node:process";
+
 dotenv.config();
+
 export const DATABASE_URI = process.env.CONNECTION_STRING;
 export const PORT = process.env.PORT;
 export const API_KEY = process.env.API_KEY;

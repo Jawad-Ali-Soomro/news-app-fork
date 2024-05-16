@@ -1,5 +1,5 @@
 import { asyncHandler } from "../utils/asyncHandler.js";
-import CustomError from "../error/CustomError.js";
+import CustomError from "../utils/ApiError.js";
 import CollectionModel from "../models/Collection.model.js";
 
 export const addToCollection = asyncHandler(async (req, res) => {

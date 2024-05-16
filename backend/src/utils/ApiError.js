@@ -1,13 +1,13 @@
-class CustomError extends Error {
-  constructor(statusCode, message = "Something went wrong", errors, stack) {
+class ApiError extends Error {
+  constructor(statusCode, message) {
     super();
     this.statusCode = statusCode;
-    this.data = null;
     this.message = message;
     this.success = false;
+    this.data = null;
     this.errors = errors || [];
     this.stack = stack || "";
   }
 }
 
-export default CustomError;
+export default ApiError;

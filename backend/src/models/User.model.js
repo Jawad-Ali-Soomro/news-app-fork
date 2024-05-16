@@ -1,4 +1,8 @@
 import mongoose from "mongoose";
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
+import ApiError from "../utils/ApiError";
+import { assignAccessToken, assignRefreshToken } from "../utils/JwtService";
 
 const userSchema = new mongoose.Schema(
   {
@@ -22,11 +26,11 @@ const userSchema = new mongoose.Schema(
       select: false,
     },
     profileImage: {
-      type: String, //url from third party server's service
+      type: String, //url from cloudry service
       required: true,
     },
     coverImage: {
-      type: String, //url from thirst party server's service
+      type: String, //url from cloudry service
       default: "myImage",
     },
     role: {
@@ -49,13 +53,65 @@ const userSchema = new mongoose.Schema(
     },
     followers: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
     following: [{ type: mongoose.SchemaTypes.ObjectId, ref: "user" }],
+
+    verified: {
+      type: Boolean,
+      default: false,
+    },
+
+    refreshToken: String,
+    resetPasswordToken: String,
+    resetPasswordExpire: Date,
+    accountVerificationToken: String,
+    accountVerificationExpire: Date,
   },
   { timestamps: true },
 );
 
-//define custom functions of this model document
-userSchema.methods.checkPassword = () => {
-  console.log("your function whenever you call it ");
+// handle duplicate key error
+userSchema.post("save", function (error, doc, next) {
+  if (error.name === "MongoServerError" && error.code === 11000) {
+    const field = Object.keys(error.keyPattern)[0]; // Get the field causing the error
+    const value = error.keyValue[field]; // Get the value causing the error
+    throw new ApiError(409, `${field} ${value} already exists`);
+  }
+  next(error);
+});
+
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  this.secure = true;
+  this.password = await bcrypt.hash(this.password, 10);
+});
+
+userSchema.methods.comparePassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// generate access and refresh token using JWT and refresh token save in user document
+userSchema.methods.getJwtTokens = async function () {
+  const payload = {
+    _id: this._id,
+    username: this.username,
+    email: this.email,
+  };
+
+  const accessToken = assignAccessToken(payload);
+  const refreshToken = assignRefreshToken(payload);
+
+  this.refreshToken = refreshToken;
+  await this.save();
+
+  return { accessToken, refreshToken };
+};
+
+userSchema.methods.generateResetPasswordToken = async function () {
+  const resetToken = crypto.randomBytes(20).toString("hex");
+  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
+  await this.save();
+  console.log("reset password token", this.resetPasswordToken, this.resetPasswordExpire);
+  return resetToken;
 };
 
 const UserModel = mongoose.model("user", userSchema);
