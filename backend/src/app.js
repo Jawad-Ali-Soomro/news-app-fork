@@ -13,12 +13,12 @@ const app = express();
 
 app.use(cors(corsOptions));
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', 'https://news-app-mern-wheat.vercel.app/');//https://news-app-mern-wheat.vercel.app/auth/login
-    res.header('Access-Control-Allow-Credentials', true);
-    res.header('Access-Control-Allow-Methods', 'GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS');
-    next();
-  });
-  
+  res.header("Access-Control-Allow-Origin", "https://news-app-mern-wheat.vercel.app/"); //https://news-app-mern-wheat.vercel.app/auth/login
+  res.header("Access-Control-Allow-Credentials", true);
+  res.header("Access-Control-Allow-Methods", "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS");
+  next();
+});
+
 app.use(express.json());
 app.use(cookieParser());
 app.use(bodyParser.json());
@@ -35,9 +35,7 @@ app.use("/api/v1/collections", collectionRouter);
 app.use(handleError);
 // eslint-disable-next-line no-undef
 process.on("unhandledRejection", (reason, promise) => {
-    console.log("Unhandled Rejection at:", promise, reason);
-
+  console.log("Unhandled Rejection at:", promise, reason);
 });
-
 
 export default app;
