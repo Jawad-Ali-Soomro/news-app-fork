@@ -80,8 +80,16 @@ userSchema.post("save", function (error, doc, next) {
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.secure = true;
   this.password = await bcrypt.hash(this.password, 10);
+});
+
+// Middleware to generate a verification token before saving a new user
+userSchema.pre("save", function (next) {
+  const now = new Date();
+  if (!(this.isNew && !this.verified)) return next();
+  this.verificationToken = crypto.randomBytes(32).toString("hex");
+  this.accountVerificationExpire = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours
+  next();
 });
 
 userSchema.methods.comparePassword = async function (enteredPassword) {

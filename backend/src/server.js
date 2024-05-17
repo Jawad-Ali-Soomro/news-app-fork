@@ -1,5 +1,5 @@
 import app from "./app.js";
-import { PORT } from "./src/config/exportEnv.js";
+import { PORT } from "./config/envManager.js";
 import connectDB from "./database/connection.js";
 import process from "node:process";
 

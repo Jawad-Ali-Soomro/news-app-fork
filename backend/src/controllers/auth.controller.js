@@ -1,7 +1,7 @@
 import { cookieOptions } from "../config/options.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { userTokenGenerator, verifyUserToken } from "../utils/helper.js";
-import CustomError from "../utils/ApiError.js";
+import ApiError from "../utils/ApiError.js";
 import notifyEmail from "../mails/notifyEmail.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import {
@@ -14,45 +14,21 @@ import {
 
 //register new user, Ensure this is not already exist in database and also automatic login
 export const registerUser = asyncHandler(async (req, res) => {
-  const { name, username, email, password } = req.body;
-  console.log(name, username, email, password);
-  //validate user data
-  if ([name, email, username, password].some(field => field === "")) {
-    throw new CustomError(400, "All fields are required");
-  }
-  //validate profile Image and cover Image
-  if (!req.files.profileImage[0].path || !req.files.coverImage[0].path) {
-    throw new CustomError(409, "please upload Images ");
-  }
-  //check If user email is already exist in database
-  const isExist = await findUserByEmail(email);
-  if (isExist) {
-    throw new CustomError(409, "your Email is already Exists ");
-  }
-  //upload profile Image on cloudinary server and Get Image URL
-  const profileImage = await uploadOnCloudinary(req.files.profileImage[0].path);
-  //upload cover Image on cloudinary server and Get Image URL
-  const coverImage = await uploadOnCloudinary(req.files.coverImage[0].path);
-  //If anyone create his user account
+  const { name, username, email, password, role } = req.body;
   const createdUser = await createNewUser({
     name,
     username,
     email,
     password,
-    profileImage: profileImage.secure_url,
-    coverImage: coverImage.secure_url,
+    role,
   });
-  //send notify email to this user for informed account creation
+  // send account verification email to user
   await notifyEmail({
     sendTo: "atifahmad2219@gmail.com",
     subject: `Thanks for join us, your account has been created on NewsApp`,
     description: "your account has created ! we were has very excited to see you, why you here !",
     username,
   });
-  //Generate Jwt token and assign to user in cookie
-  const token = userTokenGenerator({ _id: createdUser._id });
-  res.cookie("token", token, cookieOptions);
-  return res.status(201).json({ user: createdUser });
 });
 
 //register new channel, Ensure this is not already exist in database and also automatic login
