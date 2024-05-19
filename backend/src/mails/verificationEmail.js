@@ -1,5 +1,5 @@
 import React from "react";
 
-const verificationEmail = () => {};
+const verificationEmail = async () => {};
 
 export default verificationEmail;

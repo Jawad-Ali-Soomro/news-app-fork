@@ -28,12 +28,3 @@ export const verifyRefreshToken = encodedToken => {
     return null;
   }
 };
-
-export const generateAccountVerificationToken = async () => {
-  const token = crypto.randomBytes(20).toString("hex");
-  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
-  this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
-  await this.save();
-  console.log("reset password token", this.resetPasswordToken, this.resetPasswordExpire);
-  return resetToken;
-};

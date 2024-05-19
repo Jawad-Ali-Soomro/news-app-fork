@@ -1,4 +1,4 @@
-import { MODE } from "../config/exportEnv.js";
+import { MODE } from "../config/envManager.js";
 
 export const errorHandler = (err, req, res, next) => {
   console.log("Error has detected in error handler middleware !", err);

@@ -1,8 +1,8 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
-import ApiError from "../utils/ApiError";
-import { assignAccessToken, assignRefreshToken } from "../utils/JwtService";
+import ApiError from "../utils/ApiError.js";
+import { assignAccessToken, assignRefreshToken } from "../utils/authUtils.js";
 
 const userSchema = new mongoose.Schema(
   {

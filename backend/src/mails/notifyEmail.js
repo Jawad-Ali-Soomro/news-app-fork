@@ -1,7 +1,7 @@
 import nodemailer from "nodemailer";
 import path from "path";
 import hbs from "nodemailer-express-handlebars";
-import { SMTP_FROM_EMAIL, SMTP_FROM_NAME, SMTP_PASSWORD, SMTP_USER } from "../config/exportEnv.js";
+import { SMTP_FROM_EMAIL, SMTP_FROM_NAME, SMTP_PASSWORD, SMTP_USER } from "../config/envManager.js";
 
 const handlebarOptions = {
   viewEngine: {
