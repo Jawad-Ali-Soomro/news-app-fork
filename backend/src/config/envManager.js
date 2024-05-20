@@ -1,13 +1,15 @@
 import dotenv from "dotenv";
 import process from "node:process";
 
-dotenv.config();
+dotenv.config({ path: ".env" });
 
-export const DATABASE_URI = process.env.CONNECTION_STRING;
-export const PORT = process.env.PORT;
+export const DATABASE_URI = process.env.DATABASE_URI;
+export const PORT = process.env.PORT || 8000;
 export const API_KEY = process.env.API_KEY;
 export const TOKEN_SECRET_KEY = process.env.TOKEN_SECRET_KEY;
-export const FRONTEND_ORIGIN = process.env.APP_PATH;
+export const ACCESS_TOKEN_SECRET = process.env.ACCESS_TOKEN_SECRET;
+export const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
+export const FRONTEND_ORIGIN = process.env.FRONTEND_ORIGIN;
 export const SMTP_USER = process.env.SMTP_USER;
 export const SMTP_PASSWORD = process.env.SMTP_PASSWORD;
 export const SMTP_FROM_EMAIL = process.env.SMTP_FROM_EMAIL;

@@ -1,6 +1,6 @@
 import bcryptjs from "bcryptjs";
 import Jwt from "jsonwebtoken";
-import { TOKEN_SECRET_KEY } from "../config/exportEnv.js";
+import { TOKEN_SECRET_KEY } from "../config/envManager.js";
 export const hashedPassword = async password => {
   const hash = await bcryptjs.hash(password, 10);
   return hash;
@@ -30,4 +30,14 @@ export const verifyUserToken = token => {
     console.log(error);
     return false;
   }
+};
+
+export const generateToken = () => {
+  const string = crypto.randomBytes(30).toString("hex");
+  const token = crypto.createHash("sha256").update(string).digest("hex");
+  return token;
+};
+
+export const capitalizeWords = text => {
+  return text.replace(/\b\w/g, m => m.toUpperCase());
 };

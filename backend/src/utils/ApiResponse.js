@@ -1,8 +1,11 @@
+import { capitalizeWords } from "./helper";
+
 class ApiResponse {
   constructor(statusCode, data, message) {
+    const customMessage = capitalizeWords(message);
     this.statusCode = statusCode;
     this.data = data;
-    this.message = message;
+    this.message = customMessage;
     this.success = statusCode < 400;
   }
 

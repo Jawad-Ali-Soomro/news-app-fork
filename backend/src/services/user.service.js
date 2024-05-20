@@ -8,6 +8,10 @@ export const findUserById = async userId => {
   return await UserModel.findById(userId);
 };
 
+export const findUserWithPassword = async query => {
+  return await UserModel.findOne(query).select("+password");
+};
+
 //register new user in database
 export const createNewUser = async userData => {
   const hashed = await hashedPassword(userData.password);
@@ -30,6 +34,10 @@ export const createNewChannel = async channelData => {
   return await newUser.save();
 };
 
+export const findUser = async query => {
+  return await UserModel.findOne(query);
+};
+
 export const findUserByEmail = async email => {
   return await UserModel.findOne({ email });
 };
@@ -40,4 +48,8 @@ export const findUserByEmailAndPassword = async (email, password) => {
   const isMatchedPassword = await comparePassword(password, user.password);
   if (!isMatchedPassword) return null;
   return user;
+};
+
+export const findUserAndUpdate = async (query, updatedInfo) => {
+  return await UserModel.findOneAndUpdate(query, updatedInfo, { new: true });
 };

@@ -1,4 +1,4 @@
-import { FRONTEND_ORIGIN } from "./exportEnv.js";
+import { FRONTEND_ORIGIN } from "../config/envManager.js";
 
 //setup configuration of cookies for storing tokens in user's browser cookies
 export const cookieOptions = {
