@@ -31,3 +31,13 @@ export const verifyUserToken = token => {
     return false;
   }
 };
+
+export const generateToken = () => {
+  const string = crypto.randomBytes(30).toString("hex");
+  const token = crypto.createHash("sha256").update(string).digest("hex");
+  return token;
+};
+
+export const capitalizeWords = text => {
+  return text.replace(/\b\w/g, m => m.toUpperCase());
+};

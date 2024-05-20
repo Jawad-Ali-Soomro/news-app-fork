@@ -1,4 +1,5 @@
 import Joi from "joi";
+import { generateValidationErrorMessages } from "../utils/validationHelper";
 
 const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
 const usernamePattern = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/;
@@ -6,59 +7,22 @@ const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 // Define the user registration schema for validation using Joi
 const userRegistrationSchema = Joi.object({
-  name: Joi.string()
-    .min(5)
-    .max(30)
-    .messages({
-      "string.min": "org name must have at least 10 characters",
-      "string.max": "org name must less then 30 characters",
-    })
-    .required(),
+  name: Joi.string().min(5).max(30).messages(generateValidationErrorMessages("name")).required(),
   username: Joi.string()
     .min(10)
     .max(30)
     .regex(usernamePattern)
-    .messages({
-      "string.min": "username must have at least 10 characters",
-      "string.max": "username must less then 30 characters",
-      "string.pattern.base": "username must be lowercase, avoid spaces or dots",
-    })
+    .messages(generateValidationErrorMessages("username"))
     .required(),
-  email: Joi.string()
-    .email()
-    .regex(emailPattern)
-    .messages({
-      "string.email": "Invalid email address",
-      "string.pattern.base": "Invalid email address",
-    })
-    .required(),
+  email: Joi.string().email().regex(emailPattern).messages(generateValidationErrorMessages("email")).required(),
   password: Joi.string()
     .min(5)
     .max(30)
     .regex(passwordPattern)
-    .messages({
-      "string.min": "password must have at least 10 characters",
-      "string.max": "password must less then 30 characters",
-      "string.pattern.base": "password must have one lowercase, uppercase and digit ",
-    })
+    .messages(generateValidationErrorMessages("password"))
     .required(),
-  about: Joi.string()
-    .min(10)
-    .max(500)
-    .messages({
-      "string.min": "about content must have at least 10 characters",
-      "string.max": "about content must less then 500 characters",
-    })
-    .optional(),
-
-  about: Joi.string()
-    .min(10)
-    .max(500)
-    .messages({
-      "string.min": "about content must have at least 10 characters",
-      "string.max": "about content must less then 500 characters",
-    })
-    .optional(),
+  headline: Joi.string().min(10).max(500).messages(generateValidationErrorMessages("headline")).optional(),
+  about: Joi.string().min(10).max(500).messages(generateValidationErrorMessages("about")).optional(),
 });
 
 const userLoginSchema = Joi.object({
@@ -69,10 +33,7 @@ const userLoginSchema = Joi.object({
 const changePasswordSchema = Joi.object({
   currentPassword: Joi.string().required(),
   newPassword: Joi.string().required(),
-  confirmPassword: Joi.string()
-    .required()
-    .valid(Joi.ref("newPassword"))
-    .messages({ "any.only": "Confirm password must match the new password" }),
+  confirmPassword: Joi.string().required().valid(Joi.ref("newPassword")).messages(generateValidationErrorMessages),
 });
 
 const updateAccountSchema = Joi.object({

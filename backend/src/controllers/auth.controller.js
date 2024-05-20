@@ -1,129 +1,109 @@
+import ApiError from "../utils/ApiError.js";
+import ApiResponse from "../utils/ApiResponse.js";
+import verificationEmail from "../mails/verificationEmail.js";
 import { cookieOptions } from "../config/options.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { userTokenGenerator, verifyUserToken } from "../utils/helper.js";
-import ApiError from "../utils/ApiError.js";
-import notifyEmail from "../mails/notifyEmail.js";
-import { uploadOnCloudinary } from "../utils/cloudinary.js";
-import {
-  createNewChannel,
-  createNewUser,
-  findUserByEmail,
-  findUserByEmailAndPassword,
-  findUserById,
-} from "../services/user.service.js";
+import { validateFieldsBySchema } from "../utils/validationHelper.js";
+import { verifyRefreshToken } from "../utils/authUtils.js";
+import { createNewUser, findUserById, findUserWithPassword } from "../services/user.service.js";
+import { userLoginSchema, userRegistrationSchema } from "../schema/userShema.js";
 
-//register new user, Ensure this is not already exist in database and also automatic login
 export const registerUser = asyncHandler(async (req, res) => {
-  const { name, username, email, password, role } = req.body;
-  const createdUser = await createNewUser({
-    name,
-    username,
-    email,
-    password,
-    role,
-  });
+  const validatedFields = validateFieldsBySchema(userRegistrationSchema, req.body);
+  console.log(validatedFields);
+  if (validatedFields) {
+    throw new ApiError(400, "There is some validation error");
+  }
+  const userData = req.body;
+  const createdUser = await createNewUser({ ...userData });
+  if (!createdUser) {
+    throw new ApiError(500, "Error while creating user document in database");
+  }
+
   // send account verification email to user
-  await notifyEmail({
-    sendTo: "atifahmad2219@gmail.com",
-    subject: `Thanks for join us, your account has been created on NewsApp`,
-    description: "your account has created ! we were has very excited to see you, why you here !",
-    username,
-  });
+  await verificationEmail(createdUser._id);
+  return new ApiResponse(201, { user: createdUser }, "Account created successfully, varify now via email").send(res);
 });
 
-//register new channel, Ensure this is not already exist in database and also automatic login
-export const registerChannel = async (req, res) => {
-  const { name, username, email, password, about, headline } = req.body;
-  console.log(name, username, email, password, about, headline);
-  //validate channel data
-  if ([name, email, username, password, about, headline].some(field => field === "")) {
-    throw new CustomError(400, "All fields are required");
+export const loginUser = asyncHandler(async (req, res) => {
+  const validatedFields = validateFieldsBySchema(userLoginSchema, req.body);
+  if (validatedFields) {
+    throw new ApiError(400, "There is some validation error");
   }
-  //validate profile Image and cover Image
-  if (!req.files.profileImage[0].path || !req.files.coverImage[0].path) {
-    throw new CustomError(409, "please upload Images ");
-  }
-  //check If user email is already exist in database
-  const isExist = await findUserByEmail(email);
-  if (isExist) {
-    throw new CustomError(409, "your Email is already Exists ");
-  }
-  //upload profile Image on cloudinary server and Get Image URL
-  const profileImage = await uploadOnCloudinary(req.files.profileImage[0].path);
-  //upload cover Image on cloudinary server and Get Image URL
-  const coverImage = await uploadOnCloudinary(req.files.coverImage[0].path);
-  //If anyone create his user account
-  const createdChannel = await createNewChannel({
-    name,
-    username,
-    email,
-    password,
-    about,
-    headline,
-    profileImage: profileImage.secure_url,
-    coverImage: coverImage.secure_url,
-  });
-  //send notify email to this user for informed account creation
-  await notifyEmail({
-    sendTo: "atifahmad2219@gmail.com",
-    subject: `your channel creation request has pending please wait for admin response...`,
-    description:
-      "Thanks for give us request for news channel creation so your request has pending please wait for admin response...",
-    username,
-  });
-  //Generate Jwt token and assign to user in cookie
-  const token = userTokenGenerator({ _id: createdChannel._id });
-  res.cookie("token", token, cookieOptions);
-  return res.status(201).json({ user: createdChannel });
-};
-//controller for login, Get email and password from request body and find it
-export const login = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  //validate user data
-  if (!email || !password) {
-    throw new CustomError(400, "All fields are required");
-  }
-  //If user not found, Invalid email or password
-  const user = await findUserByEmailAndPassword(email, password);
+
+  const { username, password } = req.body;
+
+  const user = await findUserWithPassword({ $or: [{ email: username }, { username }] });
   if (!user) {
-    throw new CustomError(400, "Invalid username or password");
+    throw new CustomError(400, "User not found Invalid username or password");
   }
-  //Generate Jwt token and assign to user in cookie
-  const token = userTokenGenerator({ _id: user._id });
-  res.cookie("token", token, cookieOptions);
-  res.status(200).json({ user });
+
+  const isValidPassword = await user.comparePassword(password);
+  if (!isValidPassword) {
+    throw new CustomError(400, "User not found Invalid username or password");
+  }
+
+  const { accessToken, refreshToken } = await user.getJwtTokens();
+  res.cookie("accessToken", accessToken, cookieOptions);
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+
+  return new ApiResponse(200, { user }, "User Login successfully ").send(res);
 });
 
-//controller of refresh route, whenever page has refresh so user has automatic login
-export const refresh = asyncHandler(async (req, res) => {
-  const token = req.cookies.token;
+export const userAutoLoginWithRefreshToken = asyncHandler(async (req, res) => {
+  const token = req.cookies.accessToken || req.headers["Authorization"]?.replace("Berear ", "");
   if (!token) {
-    throw new CustomError(401, "your are not authenticated ");
+    throw new ApiError(401, "your are not authenticated, refresh token not found ");
   }
-  //verify the user token, check user has login or not
-  const verifiedUser = verifyUserToken(token);
-  if (!verifiedUser) {
-    throw new CustomError(401, "your are not authenticated ");
+
+  const decodedToken = verifyRefreshToken(token);
+  if (!decodedToken) {
+    throw new ApiError(401, "your  are not authenticated, Invalid refresh token ");
   }
-  //assigned new token to user in cookie
-  const newToken = userTokenGenerator({ _id: verifiedUser._id });
-  res.cookie("token", newToken, cookieOptions);
-  const user = await findUserById(verifiedUser._id);
-  res.status(200).json({ user });
+
+  const user = await findUserById(decodedToken._id);
+  if (!user) {
+    throw new ApiError(401, "your  are not authenticated, Invalid has expired or Invalid ");
+  }
+  const { accessToken, refreshToken } = await user.getJwtTokens();
+  res.cookie("accessToken", accessToken, cookieOptions);
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+
+  return new ApiResponse(200, { user }, "user access token has refreshed successfully ").send(res);
 });
 
-//logout the user and  Ensure user has already login
-export const logout = asyncHandler((req, res) => {
-  const token = req.cookies.token;
+export const logoutUser = asyncHandler(async (req, res) => {
+  const token = req.cookies.accessToken || req.headers["Authorization"]?.replace("Berear ", "");
   if (!token) {
-    throw new CustomError(401, "your are not authenticated  ");
+    throw new ApiError(401, "your are not authenticated, refresh token not found ");
   }
-  //verify the user token, check user has login or not before logout
-  const verifiedUser = verifyUserToken(token);
-  if (!verifiedUser) {
-    throw new CustomError(401, "your  are not authenticated  ");
+
+  const decodedToken = verifyRefreshToken(token);
+  if (!decodedToken) {
+    throw new ApiError(401, "your  are not authenticated, Invalid refresh token ");
   }
-  //clear token  from user cookies
-  res.clearCookie("token");
-  res.status(200).json({ message: "your successfully logout !" });
+
+  const user = await findUserById(decodedToken._id);
+  if (!user) {
+    throw new ApiError(401, "your  are not authenticated, Invalid has expired or Invalid ");
+  }
+  const { accessToken, refreshToken } = await user.getJwtTokens();
+  res.cookie("accessToken", accessToken, cookieOptions);
+  res.cookie("refreshToken", refreshToken, cookieOptions);
+
+  return new ApiResponse(200, { user }, "user access token has refreshed successfully ").send(res);
+});
+
+export const verifyAccount = asyncHandler(async (req, res) => {
+  const { token } = req.body;
+  if (token?.trim()) {
+    throw new ApiError(400, "verification token not found");
+  }
+  const user = await findUser({ verificationToken: token });
+  if (!user) {
+    throw new ApiError(401, "Invalid verification token ");
+  }
+  user.verified = true;
+  await user.save();
+  return new ApiResponse(200, { user }, "user has verified succesfully now you can login ").send(res);
 });
