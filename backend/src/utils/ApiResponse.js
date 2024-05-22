@@ -1,4 +1,4 @@
-import { capitalizeWords } from "./helper";
+import { capitalizeWords } from "./helper.js";
 
 class ApiResponse {
   constructor(statusCode, data, message) {

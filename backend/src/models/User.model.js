@@ -3,6 +3,8 @@ import crypto from "crypto";
 import bcrypt from "bcryptjs";
 import ApiError from "../utils/ApiError.js";
 import { assignAccessToken, assignRefreshToken } from "../utils/authUtils.js";
+import { ADMIN_ROLE, CHANNEL_ROLE, USER_ROLE } from "../constants.js";
+import { generateToken } from "../utils/helper.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,6 +16,9 @@ const userSchema = new mongoose.Schema(
     },
     username: {
       type: String,
+      trim: true,
+      unique: true,
+      lowerCase: true,
       required: true,
     },
     email: {
@@ -35,7 +40,7 @@ const userSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ["USER", "ADMIN", "NEWS_CHANNEL"],
+      enum: [USER_ROLE, CHANNEL_ROLE, ADMIN_ROLE],
       default: "USER",
     },
     about: {
@@ -83,15 +88,6 @@ userSchema.pre("save", async function (next) {
   this.password = await bcrypt.hash(this.password, 10);
 });
 
-// Middleware to generate a verification token before saving a new user
-userSchema.pre("save", function (next) {
-  const now = new Date();
-  if (!(this.isNew && !this.verified)) return next();
-  this.verificationToken = crypto.randomBytes(32).toString("hex");
-  this.accountVerificationExpire = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours
-  next();
-});
-
 userSchema.methods.comparePassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
@@ -114,8 +110,7 @@ userSchema.methods.getJwtTokens = async function () {
 };
 
 userSchema.methods.generateResetPasswordToken = async function () {
-  const resetToken = crypto.randomBytes(20).toString("hex");
-  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  this.resetPasswordToken = generateToken();
   this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
   await this.save();
   console.log("reset password token", this.resetPasswordToken, this.resetPasswordExpire);

@@ -3,9 +3,9 @@ import ApiResponse from "../utils/ApiResponse.js";
 import verificationEmail from "../mails/verificationEmail.js";
 import { cookieOptions } from "../config/options.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
-import { validateFieldsBySchema } from "../utils/validationHelper.js";
+import { validateSchema } from "../utils/validationHelper.js";
 import { verifyRefreshToken } from "../utils/authUtils.js";
-import { userLoginSchema, userRegistrationSchema } from "../schema/userShema.js";
+import { userLoginSchema, userRegistrationSchema } from "../schema/userSchema.js";
 import {
   createNewUser,
   findUser,
@@ -15,7 +15,7 @@ import {
 } from "../services/user.service.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
-  const validatedFields = validateFieldsBySchema(userRegistrationSchema, req.body);
+  const validatedFields = validateSchema(userRegistrationSchema, req.body);
   console.log(validatedFields);
   if (validatedFields) {
     throw new ApiError(400, "There is some validation error");
@@ -32,7 +32,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 });
 
 export const loginUser = asyncHandler(async (req, res) => {
-  const validatedFields = validateFieldsBySchema(userLoginSchema, req.body);
+  const validatedFields = validateSchema(userLoginSchema, req.body);
   if (validatedFields) {
     throw new ApiError(400, "There is some validation error");
   }
@@ -41,12 +41,12 @@ export const loginUser = asyncHandler(async (req, res) => {
 
   const user = await findUserWithPassword({ $or: [{ email: username }, { username }] });
   if (!user) {
-    throw new CustomError(400, "User not found Invalid username or password");
+    throw new ApiError(400, "User not found Invalid username or password");
   }
 
   const isValidPassword = await user.comparePassword(password);
   if (!isValidPassword) {
-    throw new CustomError(400, "User not found Invalid username or password");
+    throw new ApiError(400, "User not found Invalid username or password");
   }
 
   const { accessToken, refreshToken } = await user.getJwtTokens();
@@ -69,7 +69,7 @@ export const userAutoLoginWithRefreshToken = asyncHandler(async (req, res) => {
 
   const user = await findUserById(decodedToken._id);
   if (!user) {
-    throw new ApiError(401, "your  are not authenticated, Invalid has expired or Invalid ");
+    throw new ApiError(401, "your  are not authenticated, token has expired or Invalid ");
   }
   const { accessToken, refreshToken } = await user.getJwtTokens();
   res.cookie("accessToken", accessToken, cookieOptions);
@@ -78,6 +78,7 @@ export const userAutoLoginWithRefreshToken = asyncHandler(async (req, res) => {
   return new ApiResponse(200, { user }, "user access token has refreshed successfully ").send(res);
 });
 
+// clear user cookies and also delete refresh token from database
 export const logoutUser = asyncHandler(async (req, res) => {
   const userId = req.user._id;
   const deletedRefreshToken = await findUserAndUpdate({ _id: userId }, { $unset: { refreshToken: 1 } });
@@ -91,11 +92,12 @@ export const verifyAccount = asyncHandler(async (req, res) => {
   if (token?.trim()) {
     throw new ApiError(400, "verification token not found");
   }
-  const user = await findUser({ verificationToken: token });
+  const user = await findUser({ verificationToken: token, verificationExpire: { $gte: Date.now() } });
   if (!user) {
     throw new ApiError(401, "Invalid verification token ");
   }
   user.verified = true;
+  user.verificationToken = "";
   const savedUser = await user.save({ validateModifiedOnly: true });
   console.log(savedUser);
   if (!savedUser) {
