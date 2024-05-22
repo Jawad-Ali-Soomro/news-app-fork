@@ -9,6 +9,7 @@ const Container = ({ children, className }) => {
     </div>
   );
 };
+
 Container.propTypes = {
   children: PropTypes.any,
   className: PropTypes.string,

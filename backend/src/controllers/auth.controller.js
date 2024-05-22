@@ -5,8 +5,14 @@ import { cookieOptions } from "../config/options.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { validateFieldsBySchema } from "../utils/validationHelper.js";
 import { verifyRefreshToken } from "../utils/authUtils.js";
-import { createNewUser, findUserById, findUserWithPassword } from "../services/user.service.js";
 import { userLoginSchema, userRegistrationSchema } from "../schema/userShema.js";
+import {
+  createNewUser,
+  findUser,
+  findUserAndUpdate,
+  findUserById,
+  findUserWithPassword,
+} from "../services/user.service.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const validatedFields = validateFieldsBySchema(userRegistrationSchema, req.body);
@@ -73,25 +79,11 @@ export const userAutoLoginWithRefreshToken = asyncHandler(async (req, res) => {
 });
 
 export const logoutUser = asyncHandler(async (req, res) => {
-  const token = req.cookies.accessToken || req.headers["Authorization"]?.replace("Berear ", "");
-  if (!token) {
-    throw new ApiError(401, "your are not authenticated, refresh token not found ");
-  }
-
-  const decodedToken = verifyRefreshToken(token);
-  if (!decodedToken) {
-    throw new ApiError(401, "your  are not authenticated, Invalid refresh token ");
-  }
-
-  const user = await findUserById(decodedToken._id);
-  if (!user) {
-    throw new ApiError(401, "your  are not authenticated, Invalid has expired or Invalid ");
-  }
-  const { accessToken, refreshToken } = await user.getJwtTokens();
-  res.cookie("accessToken", accessToken, cookieOptions);
-  res.cookie("refreshToken", refreshToken, cookieOptions);
-
-  return new ApiResponse(200, { user }, "user access token has refreshed successfully ").send(res);
+  const userId = req.user._id;
+  const deletedRefreshToken = await findUserAndUpdate({ _id: userId }, { $unset: { refreshToken: 1 } });
+  res.clearCookie("accessToken");
+  res.clearCookie("refreshToken");
+  return new ApiResponse(200, {}, "user has logout successfully").send(res);
 });
 
 export const verifyAccount = asyncHandler(async (req, res) => {
@@ -104,6 +96,10 @@ export const verifyAccount = asyncHandler(async (req, res) => {
     throw new ApiError(401, "Invalid verification token ");
   }
   user.verified = true;
-  await user.save();
+  const savedUser = await user.save({ validateModifiedOnly: true });
+  console.log(savedUser);
+  if (!savedUser) {
+    throw new ApiError(401, "Error while saving user document in database");
+  }
   return new ApiResponse(200, { user }, "user has verified succesfully now you can login ").send(res);
 });

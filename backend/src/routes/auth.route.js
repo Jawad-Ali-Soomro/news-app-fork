@@ -1,5 +1,14 @@
 import express from "express";
-import { login, loginUser, logout, logoutUser, refresh, registerChannel, registerUser, userAutoLoginWithRefreshToken } from "../controllers/auth.controller.js";
+import {
+  login,
+  loginUser,
+  logout,
+  logoutUser,
+  refresh,
+  registerChannel,
+  registerUser,
+  userAutoLoginWithRefreshToken,
+} from "../controllers/auth.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
 
 const router = express.Router();
