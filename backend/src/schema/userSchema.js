@@ -8,18 +8,18 @@ const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 // Define the user registration schema for validation using Joi
 const userRegistrationSchema = Joi.object({
-  name: Joi.string().min(5).max(30).messages(getErrorMessages("name")).required(),
+  name: Joi.string().min(10).max(30).messages(getErrorMessages("name")).required(),
   username: Joi.string().min(10).max(30).regex(usernamePattern).messages(getErrorMessages("username")).required(),
   email: Joi.string().email().regex(emailPattern).messages(getErrorMessages("email")).required(),
-  password: Joi.string().min(5).max(30).regex(passwordPattern).messages(getErrorMessages("password")).required(),
+  password: Joi.string().min(10).max(30).regex(passwordPattern).messages(getErrorMessages("password")).required(),
   headline: Joi.string().min(10).max(500).messages(getErrorMessages("headline")).optional(),
   about: Joi.string().min(10).max(500).messages(getErrorMessages("about")).optional(),
   role: Joi.string().valid(USER_ROLE, CHANNEL_ROLE).messages(getErrorMessages("role")),
 });
 
 const userLoginSchema = Joi.object({
-  email: Joi.string().regex(emailPattern).required(),
-  password: Joi.string().required(),
+  username: Joi.string().required().messages(getErrorMessages("username")),
+  password: Joi.string().required().messages(getErrorMessages("password")),
 });
 
 const changePasswordSchema = Joi.object({

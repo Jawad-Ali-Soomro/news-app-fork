@@ -13,12 +13,14 @@ import {
   findUserById,
   findUserWithPassword,
 } from "../services/user.service.js";
+import UserModel from "../models/User.model.js";
+import bcrypt from "bcrypt";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const validatedFields = validateSchema(userRegistrationSchema, req.body);
   console.log(validatedFields);
-  if (validatedFields) {
-    throw new ApiError(400, "There is some validation error");
+  if (validatedFields.error) {
+    throw new ApiError(400, validatedFields.message);
   }
   const userData = req.body;
   const createdUser = await createNewUser({ ...userData });
@@ -27,24 +29,27 @@ export const registerUser = asyncHandler(async (req, res) => {
   }
 
   // send account verification email to user
-  await verificationEmail(createdUser._id);
+  // await verificationEmail(createdUser._id);
   return new ApiResponse(201, { user: createdUser }, "Account created successfully, varify now via email").send(res);
 });
 
 export const loginUser = asyncHandler(async (req, res) => {
   const validatedFields = validateSchema(userLoginSchema, req.body);
-  if (validatedFields) {
-    throw new ApiError(400, "There is some validation error");
+  if (validatedFields.error) {
+    throw new ApiError(400, validatedFields.message);
   }
 
   const { username, password } = req.body;
+  console.log(username, password);
 
-  const user = await findUserWithPassword({ $or: [{ email: username }, { username }] });
+  const user = await UserModel.findOne({ username }).select("+password");
   if (!user) {
-    throw new ApiError(400, "User not found Invalid username or password");
+    throw new ApiError(400, "User not found Invalid username or email");
   }
-
-  const isValidPassword = await user.comparePassword(password);
+  console.log(user);
+  // const isValidPassword = await user.comparePassword(password);
+  const isValidPassword = await bcrypt.compare(password, user.password);
+  console.log("Result :", isValidPassword);
   if (!isValidPassword) {
     throw new ApiError(400, "User not found Invalid username or password");
   }
@@ -52,7 +57,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await user.getJwtTokens();
   res.cookie("accessToken", accessToken, cookieOptions);
   res.cookie("refreshToken", refreshToken, cookieOptions);
-
+  console.log(user);
   return new ApiResponse(200, { user }, "User Login successfully ").send(res);
 });
 
@@ -89,10 +94,10 @@ export const logoutUser = asyncHandler(async (req, res) => {
 
 export const verifyAccount = asyncHandler(async (req, res) => {
   const { token } = req.body;
-  if (token?.trim()) {
+  if (!token?.trim()) {
     throw new ApiError(400, "verification token not found");
   }
-  const user = await findUser({ verificationToken: token, verificationExpire: { $gte: Date.now() } });
+  const user = await findUser({ verificationToken: token, verificationExpire: { $gt: Date.now() } });
   if (!user) {
     throw new ApiError(401, "Invalid verification token ");
   }

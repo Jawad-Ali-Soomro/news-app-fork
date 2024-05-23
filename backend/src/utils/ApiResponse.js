@@ -11,7 +11,7 @@ class ApiResponse {
 
   // method to send reponse
   send(res) {
-    res.statusCode(this.statusCode).json({
+    res.status(this.statusCode).json({
       statusCode: this.statusCode,
       data: this.data,
       message: this.message,

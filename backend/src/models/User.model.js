@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import ApiError from "../utils/ApiError.js";
 import { assignAccessToken, assignRefreshToken } from "../utils/authUtils.js";
 import { ADMIN_ROLE, CHANNEL_ROLE, USER_ROLE } from "../constants.js";
@@ -23,6 +23,8 @@ const userSchema = new mongoose.Schema(
     },
     email: {
       type: String,
+      unique: true,
+      trim: true,
       required: true,
     },
     password: {
@@ -32,7 +34,7 @@ const userSchema = new mongoose.Schema(
     },
     profileImage: {
       type: String, //url from cloudry service
-      required: true,
+      default: "myImage",
     },
     coverImage: {
       type: String, //url from cloudry service
@@ -85,7 +87,8 @@ userSchema.post("save", function (error, doc, next) {
 
 userSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
+  this.password = await bcrypt.hash(this.password, 20);
+  next();
 });
 
 userSchema.methods.comparePassword = async function (enteredPassword) {
