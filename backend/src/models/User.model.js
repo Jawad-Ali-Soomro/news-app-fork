@@ -32,12 +32,12 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
-    profileImage: {
-      type: String, //url from cloudry service
+    avatar: {
+      type: String, //url from cloudinary service
       default: "myImage",
     },
     coverImage: {
-      type: String, //url from cloudry service
+      type: String, //url from cloudinary service
       default: "myImage",
     },
     role: {
@@ -75,6 +75,14 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+// encrypt user password before saving the document in database
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return;
+  const hashedPassword = await bcrypt.hash(this.password, 10);
+  this.password = hashedPassword;
+  next();
+});
+
 // handle duplicate key error
 userSchema.post("save", function (error, doc, next) {
   if (error.name === "MongoServerError" && error.code === 11000) {
@@ -85,9 +93,9 @@ userSchema.post("save", function (error, doc, next) {
   next(error);
 });
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 20);
+// middleware to ensure only verified users are fetched
+userSchema.pre(["find", "findOne"], function (next) {
+  this.where({ verified: true });
   next();
 });
 

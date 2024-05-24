@@ -1,15 +1,11 @@
+import ApiError from "./ApiError.js";
+
 // helper function to validate data based on provided schema using Joi
 export const validateSchema = (schema, data) => {
-  try {
-    const validate = schema.validate(data);
-    // if there is no validation error then return it
-    if (!validate?.error) {
-      return { error: false };
-    }
-    throw new Error(validate?.error?.details?.[0]?.message || "validation error accoured");
-  } catch (error) {
-    return { error: true, message: error.message };
-  }
+  const validate = schema.validate(data);
+  if (!validate.error) return validate.value; // return validated values
+  const message = validate?.error?.details?.[0]?.message || "validation error accoured";
+  throw new ApiError(400, message);
 };
 
 // helper function to generate approtiate error messages for validation
