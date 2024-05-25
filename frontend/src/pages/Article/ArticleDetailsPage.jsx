@@ -64,10 +64,10 @@ const ArticleDetailsPage = () => {
   };
   //handle save article, If response is not successful mean this article has already in collection
   const handleSave = async () => {
-    const response=await addToCollection(id);
-    if(!response){
+    const response = await addToCollection(id);
+    if (!response) {
       setIsSavedArticle(false);
-    }else{
+    } else {
       setIsSavedArticle(true);
     }
   };

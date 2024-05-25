@@ -29,11 +29,7 @@ const Collection = () => {
 
   return (
     <React.Fragment>
-      <motion.div
-        initial="hidden"
-        animate="visible"
-        variants={borderVariants}
-      >
+      <motion.div initial="hidden" animate="visible" variants={borderVariants}>
         <BackBar pageLabel={"saved articles"} />
         <Container className={"flex flex-col justify-start items-center"}>
           {loading && <Loader />}

@@ -6,7 +6,7 @@ import api from "../../config/apiConfig.js";
 import Loader from "../../components/UI/Loader.jsx";
 const DashBoard = () => {
   const [requestList, setRequestList] = useState([]);
-  const [update,setUpdate] = useState(0);
+  const [update, setUpdate] = useState(0);
   const [loading, setLoading] = useState(true);
   useEffect(() => {
     (async () => {
@@ -58,16 +58,19 @@ const DashBoard = () => {
                             >
                               Action
                             </th>
-                          
                           </tr>
                         </thead>
                         <tbody>
                           <div className="flex justify-center">
-                          {loading&&<Loader/>}
+                            {loading && <Loader />}
                           </div>
                           {requestList.map((request) => {
                             return (
-                              <RequestCard setUpdate={setUpdate} key={request._id} {...request} />
+                              <RequestCard
+                                setUpdate={setUpdate}
+                                key={request._id}
+                                {...request}
+                              />
                             );
                           })}
                         </tbody>
@@ -87,4 +90,3 @@ const DashBoard = () => {
 };
 
 export default DashBoard;
-

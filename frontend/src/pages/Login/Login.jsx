@@ -10,7 +10,7 @@ import { login as loginSlice } from "../../store/slices/auth.slice.js";
 import { loginUser, loginWithGoogle } from "../../api/auth.js";
 import { FORM_VALIDATIONS } from "../../config/validation.js";
 
-import { motion } from "framer-motion"
+import { motion } from "framer-motion";
 
 const Login = () => {
   const navigate = useNavigate();
@@ -47,7 +47,7 @@ const Login = () => {
     dispatch(loginSlice({ ...response.data.user }));
     navigate("/articles");
   };
-  
+
   const borderVariants = {
     hidden: { opacity: 0, scale: 0 },
     visible: { opacity: 1, scale: 1, transition: { duration: 0.92 } },
@@ -55,76 +55,73 @@ const Login = () => {
 
   return (
     <React.Fragment>
- <motion.div 
-        initial="hidden"
-        animate="visible"
-        variants={borderVariants}>
-          <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-              <img
-                className="mx-auto h-20 w-auto"
-                src="https://img.freepik.com/free-vector/colorful-letter-gradient-logo-design_474888-2309.jpg?size=626&ext=jpg&ga=GA1.1.330823008.1703701840&semt=ais"
-                alt="Your Company"
-              />
-              <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                Login in your account
-              </h2>
-            </div>
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-              <form
-                onSubmit={handleSubmit(submitHandler)}
-                method="post"
-                autoComplete="off"
-                className="space-y-3"
-              >
-                <FormInput
-                  label={"Your Email "}
-                  placeholder={"Enter your Email "}
-                  type={"email"}
-                  {...register("email", FORM_VALIDATIONS.email)}
-                  error={errors.email}
-                />
-                <FormInput
-                  label="Password"
-                  name="password"
-                  placeholder={"Enter your Password "}
-                  type={"password"}
-                  {...register("password", FORM_VALIDATIONS.password)}
-                  error={errors.password}
-                />
-                <div>
-                  {submitStatus.error && (
-                    <p className="text-red-600 text-[14px]">
-                      something went wrong please try again{" "}
-                    </p>
-                  )}
-                </div>
-                <div>
-                  <Button
-                    type="submit"
-                    variant={"primary"}
-                    isLoading={submitStatus.loading}
-                    className="px-4 py-2"
-                  >
-                    Login
-                  </Button>
-                </div>
-              </form>
-              <AuthRelatedLinks
-                text={"Don't have an account !"}
-                linkLabel={"Sign Up here !"}
-                path={"/auth/signUp"}
-              />
-              <Button
-                variant={"success"}
-                className="px-2  py-2 w-fit "
-                onClick={loginWithGoogle}
-              >
-                Login with Google{" "}
-              </Button>
-            </div>
+      <motion.div initial="hidden" animate="visible" variants={borderVariants}>
+        <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
+          <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+            <img
+              className="mx-auto h-20 w-auto"
+              src="https://img.freepik.com/free-vector/colorful-letter-gradient-logo-design_474888-2309.jpg?size=626&ext=jpg&ga=GA1.1.330823008.1703701840&semt=ais"
+              alt="Your Company"
+            />
+            <h2 className="mt-4 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+              Login in your account
+            </h2>
           </div>
-          </motion.div>      
+          <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+            <form
+              onSubmit={handleSubmit(submitHandler)}
+              method="post"
+              autoComplete="off"
+              className="space-y-3"
+            >
+              <FormInput
+                label={"Your Email "}
+                placeholder={"Enter your Email "}
+                type={"email"}
+                {...register("email", FORM_VALIDATIONS.email)}
+                error={errors.email}
+              />
+              <FormInput
+                label="Password"
+                name="password"
+                placeholder={"Enter your Password "}
+                type={"password"}
+                {...register("password", FORM_VALIDATIONS.password)}
+                error={errors.password}
+              />
+              <div>
+                {submitStatus.error && (
+                  <p className="text-red-600 text-[14px]">
+                    something went wrong please try again{" "}
+                  </p>
+                )}
+              </div>
+              <div>
+                <Button
+                  type="submit"
+                  variant={"primary"}
+                  isLoading={submitStatus.loading}
+                  className="px-4 py-2"
+                >
+                  Login
+                </Button>
+              </div>
+            </form>
+            <AuthRelatedLinks
+              text={"Don't have an account !"}
+              linkLabel={"Sign Up here !"}
+              path={"/auth/signUp"}
+            />
+            <Button
+              variant={"success"}
+              className="px-2  py-2 w-fit "
+              onClick={loginWithGoogle}
+            >
+              Login with Google{" "}
+            </Button>
+          </div>
+        </div>
+      </motion.div>
     </React.Fragment>
   );
 };

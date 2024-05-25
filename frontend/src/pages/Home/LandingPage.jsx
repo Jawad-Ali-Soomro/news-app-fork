@@ -13,7 +13,7 @@ const LandingPage = () => {
       <Fade delay={4} cascade damping={0.4} duration={600}>
         <HeroSection />
       </Fade>
-      <Fade delay={4}  damping={0.4} duration={600}>
+      <Fade delay={4} damping={0.4} duration={600}>
         <AboutSection />
       </Fade>
       <Fade delay={4} cascade damping={0.4} duration={600}>
@@ -22,7 +22,7 @@ const LandingPage = () => {
       <Fade delay={4} cascade damping={0.4} duration={600}>
         <ExploreSection />
       </Fade>
-      <Fade delay={4}  damping={0.4} duration={600}>
+      <Fade delay={4} damping={0.4} duration={600}>
         <Footer />
       </Fade>
     </React.Fragment>

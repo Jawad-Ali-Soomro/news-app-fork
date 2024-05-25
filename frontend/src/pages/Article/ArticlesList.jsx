@@ -25,7 +25,7 @@ const Articles = () => {
   const filteredArticles = articles.filter(
     (article) =>
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.description.toLowerCase().includes(searchQuery.toLowerCase())
+      article.description.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   const sortArticles = (order) => {
     const sortedArticles = [...filteredArticles].sort((a, b) => {

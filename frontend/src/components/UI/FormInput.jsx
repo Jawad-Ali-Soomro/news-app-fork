@@ -17,7 +17,7 @@ const FormInput = React.forwardRef(function Form(props, ref) {
           {props.label || "Label"}
         </label>
         <div className="relative">
-          <input 
+          <input
             autoComplete="off"
             required
             className={`w-full px-4 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ${

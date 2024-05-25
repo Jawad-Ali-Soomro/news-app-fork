@@ -82,7 +82,13 @@ const ChannelProfile = () => {
             <h3 className="font-bold text-lg mb-5">Articles</h3>
             {!loading && articles.length === 0 && <p>not have articles yet!</p>}
             {articles?.map((article) => {
-              return <ArticleCard key={article._id} {...article} author={channelInfo} />;
+              return (
+                <ArticleCard
+                  key={article._id}
+                  {...article}
+                  author={channelInfo}
+                />
+              );
             })}
           </div>
         </div>

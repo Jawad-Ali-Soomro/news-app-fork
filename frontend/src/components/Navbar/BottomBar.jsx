@@ -48,8 +48,8 @@ const BottomBar = () => {
                 isPending
                   ? "text-orange-500 flex flex-col items-center"
                   : isActive
-                  ? "text-green-500 flex flex-col items-center "
-                  : " flex flex-col items-center"
+                    ? "text-green-500 flex flex-col items-center "
+                    : " flex flex-col items-center"
               }
               key={icon.path}
             >
