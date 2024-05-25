@@ -1,10 +1,11 @@
+import { isValidObjectId } from "mongoose";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import ApiError from "../utils/ApiError.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import UserModel from "../models/User.model.js";
 import { uploadOnCloudinary } from "../utils/cloudinary.js";
 import { validateSchema } from "../utils/validationHelper.js";
-import { changePasswordSchema } from "../schema/userSchema.js";
+import { changePasswordSchema, updateAccountSchema } from "../schema/userSchema.js";
 import {
   findUser,
   findUserAndDelete,
@@ -12,15 +13,14 @@ import {
   findUserWithPassword,
   findUsers,
 } from "../services/user.service.js";
-import { isValidObjectId } from "mongoose";
 
 export const getCurrentUser = asyncHandler(async (req, res) => {
   const user = req.user;
   new ApiResponse(200, { user }, "current user feched successfully").send(res);
 });
 
-export const getAllUsersList = asyncHandler((req, res) => {
-  const users = findUsers({});
+export const getAllUsersList = asyncHandler(async (req, res) => {
+  const users = await findUsers({});
   if (!users?.length) {
     throw new ApiError(404, "users not found !");
   }
@@ -32,7 +32,7 @@ export const getUserById = asyncHandler(async (req, res) => {
   if (!isValidObjectId(userId)) {
     throw new ApiError(400, "Invalid user id in params !");
   }
-  const user = findUser({ _id: userId });
+  const user = await findUser({ _id: userId });
   if (!user) {
     throw new ApiError(404, "user not found !");
   }
@@ -56,10 +56,11 @@ export const changeCurrentUserPassword = asyncHandler(async (req, res) => {
 });
 
 export const updateAccountDetails = asyncHandler(async (req, res) => {
-  const { name, username, headline, about } = req.body;
+  const validatedFields = validateSchema(updateAccountSchema, req.body);
+  const { name, username, headline, about } = validatedFields;
   const userId = req.user?._id;
   // Ensure provided username is not exists already
-  const existedUser = await UserModel.findOne({ username });
+  const existedUser = await findUser({ username });
   // If loggedIn user and existedUser are same, means existedUser is current user document
   if (existedUser?._id && String(existedUser?._id) !== String(userId)) {
     throw new ApiError(400, "username is already exists");
@@ -69,7 +70,7 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
 });
 
 export const changeUserAvatar = asyncHandler(async (req, res) => {
-  const avatarLocalPath = req?.file?.path;
+  const avatarLocalPath = req.file?.path;
   const userId = req.user?._id;
   if (!avatarLocalPath) {
     throw new ApiError(400, "please upload Image to change the avatar ");

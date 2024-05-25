@@ -21,8 +21,6 @@ export const createNewUser = async userData => {
   const hashed = await hashedPassword(userData.password);
   const newUser = new UserModel({
     ...userData,
-    password: hashed,
-    role: "USER",
   });
   return await newUser.save();
 };

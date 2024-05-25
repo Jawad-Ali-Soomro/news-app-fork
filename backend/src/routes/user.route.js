@@ -1,13 +1,13 @@
 import express from "express";
-// import { allUsers, userById } from "../controllers/user.controller.js";
-import { isAuthenticated } from "../middlewares/Authentication.middleware.js";
 import { authenticateUser } from "../middlewares/auth.middleware.js";
+import { upload } from "../middlewares/multer.middleware.js";
 import {
   changeCurrentUserPassword,
   changeUserAvatar,
   changeUserCoverImage,
   deleteAccount,
   getAllUsersList,
+  getCurrentUser,
   getUserById,
   updateAccountDetails,
 } from "../controllers/user.controller.js";
@@ -20,14 +20,16 @@ router.route("/users-list").get(getAllUsersList);
 
 router.route("/user/:id").get(getUserById);
 
-router.route("/change-password").get(changeCurrentUserPassword);
+router.route("/current-user").get(getCurrentUser);
 
-router.route("/update-account-details").get(updateAccountDetails);
+router.route("/change-password").put(changeCurrentUserPassword);
 
-router.route("/change-avatar").get(changeUserAvatar);
+router.route("/update-account-details").put(updateAccountDetails);
 
-router.route("/change-coverImage").get(changeUserCoverImage);
+router.route("/change-avatar").patch(upload.single("avatar"), changeUserAvatar);
 
-router.route("/delete-account").get(deleteAccount);
+router.route("/change-coverImage").patch(upload.single("coverImage"), changeUserCoverImage);
+
+router.route("/delete-account").delete(deleteAccount);
 
 export default router;

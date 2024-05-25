@@ -93,8 +93,10 @@ userSchema.post("save", function (error, doc, next) {
   next(error);
 });
 
-// middleware to ensure only verified users are fetched
+// middleware to ensure only verified users are fetched every Database query
 userSchema.pre(["find", "findOne"], function (next) {
+  const isFetchByVerificationToken = Object.keys(this.getQuery()).includes("verificationToken");
+  if (isFetchByVerificationToken) return next();
   this.where({ verified: true });
   next();
 });
@@ -121,11 +123,12 @@ userSchema.methods.getJwtTokens = async function () {
 };
 
 userSchema.methods.generateResetPasswordToken = async function () {
-  this.resetPasswordToken = generateToken();
+  const token = generateToken();
+  this.resetPasswordToken = token;
   this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
   await this.save();
   console.log("reset password token", this.resetPasswordToken, this.resetPasswordExpire);
-  return resetToken;
+  return token;
 };
 
 const UserModel = mongoose.model("user", userSchema);

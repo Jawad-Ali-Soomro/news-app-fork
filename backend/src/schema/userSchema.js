@@ -30,8 +30,9 @@ const changePasswordSchema = Joi.object({
 
 const updateAccountSchema = Joi.object({
   name: Joi.string().required(),
-  about: Joi.string().required(),
+  username: Joi.string().required(),
   headline: Joi.string().required(),
+  about: Joi.string().required(),
 });
 
 const resetPasswordSchema = Joi.object({

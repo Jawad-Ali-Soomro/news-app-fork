@@ -5,6 +5,7 @@ import { cookieOptions } from "../config/options.js";
 import { asyncHandler } from "../utils/asyncHandler.js";
 import { validateSchema } from "../utils/validationHelper.js";
 import { verifyRefreshToken } from "../utils/authUtils.js";
+import { sendResetPasswordEmail } from "../mails/resetPasswordEmail.js";
 import { emailPattern, resetPasswordSchema, userLoginSchema, userRegistrationSchema } from "../schema/userSchema.js";
 import {
   createNewUser,
@@ -13,9 +14,6 @@ import {
   findUserById,
   findUserWithPassword,
 } from "../services/user.service.js";
-import UserModel from "../models/User.model.js";
-import bcrypt from "bcrypt";
-import { sendResetPasswordEmail } from "../mails/resetPasswordEmail.js";
 
 export const registerUser = asyncHandler(async (req, res) => {
   const validatedFields = validateSchema(userRegistrationSchema, req.body);
@@ -39,7 +37,7 @@ export const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "User not found Invalid username or email");
   }
   const isValidPassword = await user.comparePassword(password);
-  if (isValidPassword) {
+  if (!isValidPassword) {
     throw new ApiError(400, "User not found Invalid your password");
   }
 
@@ -115,11 +113,12 @@ export const forgotPassword = asyncHandler(async (req, res) => {
 export const resetPassword = asyncHandler(async (req, res) => {
   const validatedFields = validateSchema(resetPasswordSchema, req.body);
   const { token, password } = validatedFields;
-  const user = findUserWithPassword({ resetPasswordToken: token, verificationExpire: { $gt: Date.now() } });
+  const user = await findUserWithPassword({ resetPasswordToken: token, verificationExpire: { $gt: Date.now() } });
   if (!user) {
     throw new ApiError(400, "user not found invalid reset password token");
   }
   user.password = password;
+  user.resetPasswordToken = "";
   await user.save({ validateModifiedOnly: true });
   return new ApiResponse(200, {}, "your password has reset successfully ").send(res);
 });
