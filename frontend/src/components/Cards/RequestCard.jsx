@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import Button from "../../components/UI/Button";
+import { Button } from "../../components/UI/button";
 import { acceptRequestByAdmin, rejectRequestByAdmin } from "../../api/channels";
 import { toast } from "react-toastify";
 import { useState } from "react";

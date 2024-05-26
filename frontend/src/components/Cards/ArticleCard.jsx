@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/UI/Button";
+import { Button } from "../../components/UI/button";
 import { timeAgo } from "../../utils/timeStamp";
 import { motion } from "framer-motion";
 

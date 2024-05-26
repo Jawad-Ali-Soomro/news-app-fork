@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import BackBar from "../../components/Navbar/BackBar";
 import BottomBar from "../../components/Navbar/BottomBar";
 import Container from "../../containers/Container";
-import Button from "../../components/UI/Button";
+import { Button } from "../../components/UI/button";
 import FormInput from "../../components/UI/FormInput";
 import { createArticleByChannel } from "../../api/articles";
 import { toast } from "react-toastify";

@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { logoutUser } from "../../api/auth";
 import { toast } from "react-toastify";
 import { logout } from "../../store/slices/auth.slice";
-import Button from "../UI/Button";
+import { Button } from "../UI/button";
 
 const Navbar = () => {
   const navigate = useNavigate();

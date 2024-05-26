@@ -19,7 +19,7 @@ import SignUpPage from "../pages/SignUp/SignUpPage.jsx";
 import useAutoLogin from "../hooks/useAutoLogin.js";
 //import all pages
 const Router = () => {
-  useAutoLogin();
+  // useAutoLogin();
   return (
     <Routes>
       {/* common routes of App available of all */}

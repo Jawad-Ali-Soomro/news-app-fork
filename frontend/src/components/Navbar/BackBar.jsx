@@ -1,7 +1,7 @@
 import { FaArrowLeft } from "react-icons/fa6";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
-import Button from "../../components/UI/Button";
+import { Button } from "../../components/UI/button";
 import { logoutUser } from "../../api/auth";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";

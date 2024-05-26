@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import BackBar from "../../components/Navbar/BackBar";
 import Container from "../../containers/Container";
 import BottomBar from "../../components/Navbar/BottomBar";
-import Button from "../../components/UI/Button";
+import { Button } from "../../components/UI/button";
 import { useNavigate } from "react-router-dom";
 const Settings = () => {
   const [darkMode, setDarkMode] = useState(false);

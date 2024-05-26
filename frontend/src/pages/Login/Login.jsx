@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import FormInput from "../../components/UI/FormInput.jsx";
-import Button from "../../components/UI/Button.jsx";
+import { Button } from "../../components/UI/button.jsx";
 import AuthRelatedLinks from "../../components/Wrappers/AuthRelatedLinks.jsx";
 import { login as loginSlice } from "../../store/slices/auth.slice.js";
 import { loginUser, loginWithGoogle } from "../../api/auth.js";

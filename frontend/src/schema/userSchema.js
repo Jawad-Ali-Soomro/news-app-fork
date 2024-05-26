@@ -24,7 +24,7 @@ export const userRegistrationSchema = Yup.object().shape({
     .matches(emailPattern, "email must be valid")
     .required("email is required"),
   password: Yup.string()
-    .min(10, "password should be at least 10")
+    .min(5, "password should be at least 5")
     .max(30, "password must less then 30 characters")
     .matches(passwordPattern, "password must have uppercase and one digit ")
     .required("password is required"),

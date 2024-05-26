@@ -9,11 +9,8 @@ const FormInput = React.forwardRef(function Form(props, ref) {
   };
   return (
     <React.Fragment>
-      <div className="mb-5">
-        <label
-          htmlFor="email"
-          className="block text-sm font-medium leading-6 text-gray-900"
-        >
+      <div className="mb-2">
+        <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
           {props.label || "Label"}
         </label>
         <div className="relative">
@@ -24,25 +21,16 @@ const FormInput = React.forwardRef(function Form(props, ref) {
               props.error ? "ring-red-600" : "ring-gray-300"
             } placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6`}
             {...props}
-            type={
-              props.type === "password" && showPassword
-                ? "text"
-                : props.type || "text"
-            }
+            type={props.type === "password" && showPassword ? "text" : props.type || "text"}
             ref={ref}
           />
           {props.type === "password" && (
-            <div
-              className="absolute right-3 mt-[10px] top-0"
-              onClick={handlePasswordType}
-            >
+            <div className="absolute right-3 mt-[10px] top-0" onClick={handlePasswordType}>
               {showPassword ? <FaRegEyeSlash /> : <FaRegEye />}
             </div>
           )}
         </div>
-        {props.error && (
-          <p className="text-red-600 text-[12px]">{props?.error?.message}</p>
-        )}
+        {props.error && <p className="text-red-600 font-semibold text-[14px]">{props?.error?.message}</p>}
       </div>
     </React.Fragment>
   );

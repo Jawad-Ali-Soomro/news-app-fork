@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { registerUser } from "../../api/auth";
 import { login } from "../../store/slices/auth.slice.js";
 import AuthRelatedLinks from "../../components/Wrappers/AuthRelatedLinks";
-import Button from "../../components/UI/Button";
+import { Button } from "../../components/UI/button";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 
