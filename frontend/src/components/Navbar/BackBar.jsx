@@ -21,20 +21,14 @@ const BackBar = ({ pageLabel }) => {
     navigate("/");
   };
   return (
-    <div className="w-full bg-gray-900 flex justify-between px-5 items-center h-12">
+    <div className="w-full bg-gray-900 flex justify-between px-5 items-center h-12 z-50">
       <div className="flex gap-3 items-center">
         <button className="text-gray-100 h-[100%]" onClick={handleNavigate}>
           <FaArrowLeft />
         </button>
         <h3 className="text-lg text-gray-100 font-bold">{pageLabel}</h3>
       </div>
-      <Button
-        type="button"
-        className="px-2 py-2"
-        variant={"danger"}
-        isLoading={false}
-        onClick={handleLogout}
-      >
+      <Button type="button" className="px-2 py-2" variant={"danger"} isLoading={false} onClick={handleLogout}>
         Logout
       </Button>
     </div>
