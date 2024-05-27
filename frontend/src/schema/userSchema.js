@@ -11,7 +11,7 @@ const emailPattern = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 // define user registration schema using yup
 export const userRegistrationSchema = Yup.object().shape({
   name: Yup.string()
-    .min(10, "name should be at least 10")
+    .min(5, "name should be at least 5")
     .max(30, "name must less then 30 characters")
     .required("name is required"),
   username: Yup.string()
@@ -38,5 +38,33 @@ export const userRegistrationSchema = Yup.object().shape({
     .optional(),
   role: Yup.string()
     .oneOf([USER_ROLE, CHANNEL_ROLE], "role must be valid user or channel")
-    .required("role is required"),
+    .optional("role is required"),
+});
+
+// define user login schema using yup
+export const userLoginSchema = Yup.object().shape({
+  username: Yup.string().required("username or email is required"),
+  password: Yup.string().required("password is required"),
+});
+
+export const changePasswordSchema = Yup.object().shape({
+  currentPassword: Yup.string().required("Current Password is required"),
+  newPassword: Yup.string().required("New Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("newPassword")], "Confirm Password must be match with password")
+    .required("Confirm Password is required"),
+});
+
+export const updateAccountSchema = Yup.object().shape({
+  name: Yup.string().required("Name is required"),
+  username: Yup.string().required("Username is required"),
+  headline: Yup.string().required("Headline is required"),
+  about: Yup.string().required("About is required"),
+});
+
+export const resetPasswordSchema = Yup.object().shape({
+  password: Yup.string().required("Password is required"),
+  confirmPassword: Yup.string()
+    .oneOf([Yup.ref("password")], "Confirm Password")
+    .required("Confirm Password is required"),
 });
