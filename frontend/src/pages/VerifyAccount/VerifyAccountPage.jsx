@@ -43,7 +43,7 @@ const VerifyAccountPage = () => {
             Your account has been verified successfully. You can now click the login button below to access your
             account.
           </h3>
-          <Button onClick={() => navigate("/auth/login")} loading={true}>
+          <Button onClick={() => navigate("/auth/login")} loading={verifyStatus.isLoading}>
             Login Here !
           </Button>
         </div>
