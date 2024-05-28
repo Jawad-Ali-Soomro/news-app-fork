@@ -7,25 +7,32 @@ import NotFoundPage from "../pages/Error/NotFoundPage.jsx";
 import DashBoard from "../pages/Admin/DashBoard.jsx";
 import ProtectedByAdmin from "./Protected/ProtectedByAdmin.jsx";
 import RegisterChannel from "../pages/SignUp/ChannelRegister.jsx";
-import ArticleList from "../pages/Article/ArticlesList.jsx"
-import ChannelsList from "../pages/Channel/ChannelsList.jsx"
-import Login from "../pages/Login/Login.jsx"
-import ChannelProfile from "../pages/Channel/ChannelProfile.jsx"
-import ArticleDetailsPage from "../pages/Article/ArticleDetailsPage.jsx"
-import Settings from "../pages/Settings/Settings.jsx"
-import Collection from "../pages/Collection/Collection.jsx"
+import ArticleList from "../pages/Article/ArticlesList.jsx";
+import ChannelsList from "../pages/Channel/ChannelsList.jsx";
+import LoginPage from "../pages/Login/LoginPage.jsx";
+import ChannelProfile from "../pages/Channel/ChannelProfile.jsx";
+import ArticleDetailsPage from "../pages/Article/ArticleDetailsPage.jsx";
+import Settings from "../pages/Settings/Settings.jsx";
+import Collection from "../pages/Collection/Collection.jsx";
 import LandingPage from "../pages/Home/LandingPage.jsx";
-import SignUp from "../pages/SignUp/SignUp.jsx";
+import SignUpPage from "../pages/SignUp/SignUpPage.jsx";
 import useAutoLogin from "../hooks/useAutoLogin.js";
+import VerifyAccountPage from "../pages/VerifyAccount/VerifyAccountPage.jsx";
+import ForgotPasswordPage from "../pages/EditProfile/ForgotPasswordPage.jsx";
+import ResetPasswordPage from "../pages/EditProfile/ResetPasswordPage.jsx";
+
 //import all pages
 const Router = () => {
-  useAutoLogin();
+  // useAutoLogin();
   return (
     <Routes>
       {/* common routes of App available of all */}
       <Route exact path="/" element={<LandingPage />} />
-      <Route exact path="/auth/login" element={<Login />} />
-      <Route exact path="/auth/signUp" element={<SignUp />} />
+      <Route exact path="/auth/login" element={<LoginPage />} />
+      <Route exact path="/auth/signUp" element={<SignUpPage />} />
+      <Route exact path="/auth/verify-account" element={<VerifyAccountPage />} />
+      <Route exact path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+      <Route exact path="/auth/reset-password" element={<ResetPasswordPage />} />
       <Route exact path="/auth/channelRegister" element={<RegisterChannel />} />
       {/* protected routes by login user */}
       <Route element={<ProtectedByUser />}>

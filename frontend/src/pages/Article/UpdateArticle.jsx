@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import BackBar from "../../components/Navbar/BackBar";
 import BottomBar from "../../components/Navbar/BottomBar";
 import Container from "../../containers/Container";
-import Button from "../../components/UI/Button";
+import { Button } from "../../components/UI/button";
 import FormInput from "../../components/UI/FormInput";
 import { useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
@@ -30,7 +30,7 @@ const UpdateArticle = () => {
       icon: "success",
       title: response?.data?.message,
       showConfirmButton: false,
-      timer: 1500
+      timer: 1500,
     });
 
     setUpdatedArticle({});

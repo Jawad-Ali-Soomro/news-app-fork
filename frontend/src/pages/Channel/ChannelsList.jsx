@@ -25,7 +25,7 @@ const ChannelsList = () => {
       channel.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       channel.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
       channel.headline.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      channel.about.toLowerCase().includes(searchQuery.toLowerCase())
+      channel.about.toLowerCase().includes(searchQuery.toLowerCase()),
   );
 
   return (

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import BackBar from "../../components/Navbar/BackBar";
 import BottomBar from "../../components/Navbar/BottomBar";
 import Container from "../../containers/Container";
-import Button from "../../components/UI/Button";
+import { Button } from "../../components/UI/button";
 import FormInput from "../../components/UI/FormInput";
 import { createArticleByChannel } from "../../api/articles";
 import { toast } from "react-toastify";
@@ -10,8 +10,10 @@ import { useForm } from "react-hook-form";
 import { ARTICLE_VALIDATION } from "../../config/validation";
 import { useSelector } from "react-redux";
 const CreateArticle = () => {
-  const [isUploading,setIsUploading]=useState(false);
-  const adminApproval=useSelector((state)=>state.auth.user.channelApprovalStatus);
+  const [isUploading, setIsUploading] = useState(false);
+  const adminApproval = useSelector(
+    (state) => state.auth.user.channelApprovalStatus,
+  );
   const {
     register,
     handleSubmit,
@@ -43,8 +45,19 @@ const CreateArticle = () => {
           Create a new Article for users of App
         </h3>
         <div className="text-center mt-5">
-    {adminApproval==="REJECTED"&&<p className="text-[14px] text-red-700">your channel has rejected by admi, you not be able to write article</p>}
-    {adminApproval==="PENDING"&&<p className="text-[14px] text-red-700"> your channel request has pending,please wait for admin approval, you not be able to write article</p>}
+          {adminApproval === "REJECTED" && (
+            <p className="text-[14px] text-red-700">
+              your channel has rejected by admi, you not be able to write
+              article
+            </p>
+          )}
+          {adminApproval === "PENDING" && (
+            <p className="text-[14px] text-red-700">
+              {" "}
+              your channel request has pending,please wait for admin approval,
+              you not be able to write article
+            </p>
+          )}
         </div>
         <form
           className="flex flex-col w-full max-w-[55%]"

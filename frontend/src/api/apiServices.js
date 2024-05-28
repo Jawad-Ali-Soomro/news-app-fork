@@ -1,8 +1,8 @@
 import axios from "axios";
+import toast from "react-hot-toast";
 
 const instance = axios.create({
-  baseURL: "http://localhost:8000",
-  timeout: 3000,
+  baseURL: "http://localhost:5000",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",
@@ -20,31 +20,76 @@ const requestInterceptor = (config) => {
   return config;
 };
 
+const responseInterceptor = (response) => {
+  if (!response.data) return response;
+  const customResponse = {
+    success: true,
+    data: response.data?.data || {},
+    message: response.data?.message || "request was successful",
+  };
+  toast.success(customResponse.message);
+  return customResponse;
+};
+
+const errorInterceptor = (error) => {
+  const response = error.response || {};
+  console.log(error);
+  const customResponse = {
+    success: false,
+    data: response.data?.data || null,
+    message: response.data?.message || "An error occurred",
+  };
+  toast.error(customResponse.message);
+  return Promise.reject(customResponse);
+};
+
+instance.interceptors.response.use(responseInterceptor, errorInterceptor);
+
 instance.interceptors.request.use(requestInterceptor);
 
 const getRequest = async (endpoint, params = {}) => {
-  const response = await instance.get(endpoint, { params });
-  return response.data;
+  try {
+    const response = await instance.get(endpoint, { params });
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 };
 
 const postRequest = async (endpoint, data) => {
-  const response = await instance.post(endpoint, data);
-  return response.data;
+  try {
+    const response = await instance.post(endpoint, data);
+    return response;
+  } catch (error) {
+    return error;
+  }
 };
 
 const putRequest = async (endpoint, data) => {
-  const response = await instance.put(endpoint, data);
-  return response.data;
+  try {
+    const response = await instance.put(endpoint, data);
+    return response.data;
+  } catch (error) {
+    return error;
+  }
 };
 
 const patchRequest = async (endpoint, data) => {
-  const response = await instance.patch(endpoint, data);
-  return response.data;
+  try {
+    const response = await instance.patch(endpoint, data);
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
 };
 
 const deleteRequest = async (endpoint, data) => {
-  const response = await instance.delete(endpoint, { data });
-  return response.data;
+  try {
+    const response = await instance.delete(endpoint, { data });
+    return response.data;
+  } catch (error) {
+    return error.response;
+  }
 };
 
-export { postRequest, postRequestWithoutToken, getRequest, putRequest, patchRequest, deleteRequest };
+export { postRequest, getRequest, putRequest, patchRequest, deleteRequest };

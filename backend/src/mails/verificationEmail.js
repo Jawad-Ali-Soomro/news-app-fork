@@ -7,7 +7,7 @@ import { generateToken } from "../utils/helper.js";
 const verificationEmail = async userId => {
   const token = generateToken();
   const expire = Date.now() + 14 * 60 * 60 * 1000;
-  const verificationPageURL = `${FRONTEND_ORIGIN}/auth/account-verification?token=${token}`;
+  const verificationPageURL = `${FRONTEND_ORIGIN}/auth/verify-account?token=${token}`;
   const user = await findUserAndUpdate({ _id: userId }, { verificationToken: token, verificationExpire: expire });
   if (!user) {
     throw new ApiError(500, "Error while updating verification token in user document");

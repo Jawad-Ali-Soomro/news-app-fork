@@ -5,7 +5,7 @@ import ArticleCard from "../../components/Cards/ArticleCard";
 import BackBar from "../../components/Navbar/BackBar";
 import Loader from "../../components/UI/Loader";
 import { fetchArticles } from "../../api/articles";
-import Button from "../../components/UI/Button";
+import { Button } from "../../components/UI/button";
 
 const Articles = () => {
   const [articles, setArticles] = useState([]);
@@ -25,7 +25,7 @@ const Articles = () => {
   const filteredArticles = articles.filter(
     (article) =>
       article.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article.description.toLowerCase().includes(searchQuery.toLowerCase())
+      article.description.toLowerCase().includes(searchQuery.toLowerCase()),
   );
   const sortArticles = (order) => {
     const sortedArticles = [...filteredArticles].sort((a, b) => {

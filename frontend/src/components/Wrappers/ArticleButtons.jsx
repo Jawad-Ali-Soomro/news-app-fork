@@ -1,6 +1,6 @@
 // ArticleButtons.jsx
 import React from "react";
-import Button from "../../components/UI/Button.jsx";
+import { Button } from "../../components/UI/button.jsx";
 import PropTypes from "prop-types";
 const ArticleButtons = ({
   handleSave,

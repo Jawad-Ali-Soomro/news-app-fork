@@ -50,18 +50,17 @@ const CommentsContainer = () => {
                 className="comment flex items-start justify-between space-x-4 mb-4 border-b pb-5"
               >
                 <div className="flex gap-2">
-
-                <img
-                  src={comment.userId.profileImage}
-                  alt="User Avatar"
-                  className="w-10 h-10 rounded-full"
-                />
-                <div>
-                  <p className="text-gray-800 font-semibold">
-                    {comment.userId.name}
-                  </p>
-                  <p className="text-gray-600">{comment.commentText}</p>
-                </div>
+                  <img
+                    src={comment.userId.profileImage}
+                    alt="User Avatar"
+                    className="w-10 h-10 rounded-full"
+                  />
+                  <div>
+                    <p className="text-gray-800 font-semibold">
+                      {comment.userId.name}
+                    </p>
+                    <p className="text-gray-600">{comment.commentText}</p>
+                  </div>
                 </div>
                 <span className="text-[11px]">{timeAgo(comment.createAt)}</span>
               </div>
