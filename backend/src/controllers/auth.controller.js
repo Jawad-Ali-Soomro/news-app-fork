@@ -17,6 +17,7 @@ import {
 
 export const registerUser = asyncHandler(async (req, res) => {
   const validatedFields = validateSchema(userRegistrationSchema, req.body);
+  console.log("I am from register first");
   const userData = validatedFields;
   const createdUser = await createNewUser({ ...userData });
   if (!createdUser) {
@@ -25,6 +26,7 @@ export const registerUser = asyncHandler(async (req, res) => {
 
   // send account verification email to user
   await verificationEmail(createdUser._id);
+  console.log("I am from register second");
   return new ApiResponse(201, { user: createdUser }, "Account created successfully, varify now via email").send(res);
 });
 
@@ -44,7 +46,7 @@ export const loginUser = asyncHandler(async (req, res) => {
   const { accessToken, refreshToken } = await user.getJwtTokens();
   res.cookie("accessToken", accessToken, cookieOptions);
   res.cookie("refreshToken", refreshToken, cookieOptions);
-  return new ApiResponse(200, { user }, "User Login successfully ").send(res);
+  return new ApiResponse(200, { user, accessToken, refreshToken }, "User Login successfully ").send(res);
 });
 
 export const userAutoLoginWithRefreshToken = asyncHandler(async (req, res) => {

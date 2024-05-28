@@ -27,7 +27,7 @@ const SettingsPage = () => {
             <TabsTrigger value="account">Update Account Details </TabsTrigger>
             <TabsTrigger value="password">Change Password</TabsTrigger>
             <TabsTrigger value="change-avatar">Change Avatar Image </TabsTrigger>
-            <TabsTrigger value="change-coverImage">Change COver Image </TabsTrigger>
+            <TabsTrigger value="change-coverImage">Change Cover Image </TabsTrigger>
           </TabsList>
           <TabsContent value="password" className="mt-10">
             <ChangePasswordForm />

@@ -5,16 +5,30 @@ import { userLoginSchema } from "../../schema/userSchema";
 import { Button } from "../../components/UI/button";
 import FormInput from "../../components/UI/FormInput";
 import { useState } from "react";
+import { postRequest } from "../../api/apiServices";
+import { useAsyncError, useAsyncValue, useNavigate } from "react-router-dom";
+import { login } from "../../store/slices/auth.slice.js";
+import { useDispatch } from "react-redux";
 
 function LoginPage() {
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(userLoginSchema),
   });
 
-  function submitHandler(data, event) {
+  const submitHandler = async (data, event) => {
     event.preventDefault();
-    console.log("In submited form", data);
-  }
+    setErrorMessage("");
+    const response = await postRequest("/api/v1/auth/login", data);
+
+    if (!response.success) return setErrorMessage(response.message);
+    // set user details and auth tokens in redux store
+    const { user, accessToken, refreshToken } = response.data;
+    dispatch(login({ user, accessToken, refreshToken }));
+    navigate("/settings");
+  };
 
   return (
     <div className="flex justify-between items-center h-screen w-100">
@@ -33,7 +47,7 @@ function LoginPage() {
           <FormInput
             {...register("username")}
             placeholder={"John_19"}
-            label={"Username "}
+            label={"Username or Email"}
             error={formState.errors.username}
           />
           <FormInput
@@ -43,7 +57,8 @@ function LoginPage() {
             error={formState.errors.password}
             {...register("password")}
           />
-          <Button type="submit" className="mt-2">
+          <p className="my-5 text-red-500">{errorMessage}</p>
+          <Button type="submit" className="mt-2" loading={formState.isSubmitting}>
             Login Account
           </Button>
         </form>

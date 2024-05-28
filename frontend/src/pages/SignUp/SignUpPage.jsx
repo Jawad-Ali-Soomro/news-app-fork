@@ -6,9 +6,12 @@ import FormInput from "../../components/UI/FormInput";
 import TextArea from "../../components/UI/TextArea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../../components/UI/select";
 import { useState } from "react";
+import { postRequest } from "../../api/apiServices";
 
 function RegistrationPage() {
-  const [selectedRole, setSelectedRole] = useState("USER"); // by default user
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [selectedRole, setSelectedRole] = useState("USER"); // by default user role
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(userRegistrationSchema),
   });
@@ -17,10 +20,16 @@ function RegistrationPage() {
     setSelectedRole(value);
   };
 
-  function submitHandler(data, event) {
+  const submitHandler = async (data, event) => {
     event.preventDefault();
+    setErrorMessage("");
+    setSuccessMessage("");
+    const response = await postRequest("/api/v1/auth/register", data);
+    console.log(response);
+    if (!response.success) return setErrorMessage(response.message);
+    setSuccessMessage(response.message);
     console.log("In submited form", { ...data, role: selectedRole });
-  }
+  };
 
   return (
     <div className="flex justify-between items-center h-screen w-100">
@@ -34,6 +43,7 @@ function RegistrationPage() {
       <div className="w-1/2 sm:px-20 md:px-10">
         <div className="sm:mb-4">
           <h1 className="text-4xl font-bold ">Register Your Account</h1>
+          <p className="text-green-500">{successMessage}</p>
         </div>
         <form onSubmit={handleSubmit(submitHandler)} className="space-y-3">
           <FormInput placeholder={"John"} label={"Name "} error={formState.errors.name} {...register("name")} />
@@ -78,7 +88,8 @@ function RegistrationPage() {
               />
             </>
           )}
-          <Button type="submit" className="mt-2">
+          <p className="my-5 text-red-500">{errorMessage}</p>
+          <Button type="submit" className="mt-2" loading={formState.isSubmitting}>
             Register Account
           </Button>
         </form>
