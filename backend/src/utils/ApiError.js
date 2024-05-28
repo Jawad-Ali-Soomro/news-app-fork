@@ -1,4 +1,4 @@
-import { capitalizeWords } from "./helper";
+import { capitalizeWords } from "./helper.js";
 
 class ApiError extends Error {
   constructor(statusCode, message) {

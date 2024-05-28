@@ -1,8 +1,10 @@
 import mongoose from "mongoose";
 import crypto from "crypto";
-import bcrypt from "bcryptjs";
+import bcrypt from "bcrypt";
 import ApiError from "../utils/ApiError.js";
 import { assignAccessToken, assignRefreshToken } from "../utils/authUtils.js";
+import { ADMIN_ROLE, CHANNEL_ROLE, USER_ROLE } from "../constants.js";
+import { generateToken } from "../utils/helper.js";
 
 const userSchema = new mongoose.Schema(
   {
@@ -14,10 +16,15 @@ const userSchema = new mongoose.Schema(
     },
     username: {
       type: String,
+      trim: true,
+      unique: true,
+      lowerCase: true,
       required: true,
     },
     email: {
       type: String,
+      unique: true,
+      trim: true,
       required: true,
     },
     password: {
@@ -25,17 +32,17 @@ const userSchema = new mongoose.Schema(
       required: true,
       select: false,
     },
-    profileImage: {
-      type: String, //url from cloudry service
-      required: true,
+    avatar: {
+      type: String, //url from cloudinary service
+      default: "myImage",
     },
     coverImage: {
-      type: String, //url from cloudry service
+      type: String, //url from cloudinary service
       default: "myImage",
     },
     role: {
       type: String,
-      enum: ["USER", "ADMIN", "NEWS_CHANNEL"],
+      enum: [USER_ROLE, CHANNEL_ROLE, ADMIN_ROLE],
       default: "USER",
     },
     about: {
@@ -68,6 +75,14 @@ const userSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
+// encrypt user password before saving the document in database
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return;
+  const hashedPassword = await bcrypt.hash(this.password, 10);
+  this.password = hashedPassword;
+  next();
+});
+
 // handle duplicate key error
 userSchema.post("save", function (error, doc, next) {
   if (error.name === "MongoServerError" && error.code === 11000) {
@@ -78,17 +93,11 @@ userSchema.post("save", function (error, doc, next) {
   next(error);
 });
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next();
-  this.password = await bcrypt.hash(this.password, 10);
-});
-
-// Middleware to generate a verification token before saving a new user
-userSchema.pre("save", function (next) {
-  const now = new Date();
-  if (!(this.isNew && !this.verified)) return next();
-  this.verificationToken = crypto.randomBytes(32).toString("hex");
-  this.accountVerificationExpire = new Date(now.getTime() + 24 * 60 * 60 * 1000); // 24 hours
+// middleware to ensure only verified users are fetched every Database query
+userSchema.pre(["find", "findOne"], function (next) {
+  const isFetchByVerificationToken = Object.keys(this.getQuery()).includes("verificationToken");
+  if (isFetchByVerificationToken) return next();
+  this.where({ verified: true });
   next();
 });
 
@@ -114,12 +123,12 @@ userSchema.methods.getJwtTokens = async function () {
 };
 
 userSchema.methods.generateResetPasswordToken = async function () {
-  const resetToken = crypto.randomBytes(20).toString("hex");
-  this.resetPasswordToken = crypto.createHash("sha256").update(resetToken).digest("hex");
+  const token = generateToken();
+  this.resetPasswordToken = token;
   this.resetPasswordExpire = Date.now() + 30 * 60 * 1000;
   await this.save();
   console.log("reset password token", this.resetPasswordToken, this.resetPasswordExpire);
-  return resetToken;
+  return token;
 };
 
 const UserModel = mongoose.model("user", userSchema);

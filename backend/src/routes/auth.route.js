@@ -1,32 +1,35 @@
 import express from "express";
-import {
-  login,
-  loginUser,
-  logout,
-  logoutUser,
-  refresh,
-  registerChannel,
-  registerUser,
-  userAutoLoginWithRefreshToken,
-} from "../controllers/auth.controller.js";
 import { upload } from "../middlewares/multer.middleware.js";
+import {
+  registerUser,
+  loginUser,
+  logoutUser,
+  userAutoLoginWithRefreshToken,
+  verifyAccount,
+  forgotPassword,
+  resetPassword,
+} from "../controllers/auth.controller.js";
+import { authenticateUser } from "../middlewares/auth.middleware.js";
 
 const router = express.Router();
 
-// define config for uplaod files on user registration
 const uplaodImages = [
   { name: "profileImage", maxCount: 1 },
   { name: "coverImage", maxCount: 1 },
 ];
 
+router.route("/register").post(registerUser);
+
 router.route("/login").post(loginUser);
 
-router.route("/register").post(upload.fields(uplaodImages), registerUser);
+router.route("/logout").post(authenticateUser, logoutUser);
 
-router.route("/logout").post(logoutUser);
+router.route("/refresh-token").post(authenticateUser, userAutoLoginWithRefreshToken);
 
-router.route("/refresh-token").post(userAutoLoginWithRefreshToken);
+router.route("/verify-account").post(verifyAccount);
 
-router.route("/verify-account").post(refresh);
+router.route("/forgot-password").post(forgotPassword);
+
+router.route("/reset-password").post(resetPassword);
 
 export default router;

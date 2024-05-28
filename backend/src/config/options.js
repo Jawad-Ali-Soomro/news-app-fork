@@ -4,7 +4,7 @@ import { FRONTEND_ORIGIN } from "../config/envManager.js";
 export const cookieOptions = {
   httpOnly: true,
   maxAge: 1000 * 1000 * 60 * 60 * 24 * 3,
-  secure: true,
+  // secure: true,
 };
 
 //setup configuration of cors to allow over frontend App Origin to access server

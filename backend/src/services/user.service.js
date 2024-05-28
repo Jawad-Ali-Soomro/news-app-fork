@@ -1,8 +1,8 @@
 import { comparePassword, hashedPassword } from "../utils/helper.js";
 import UserModel from "../models/User.model.js";
 
-export const findUsers = async () => {
-  return await UserModel.find();
+export const findUsers = async query => {
+  return await UserModel.find(query);
 };
 export const findUserById = async userId => {
   return await UserModel.findById(userId);
@@ -12,13 +12,15 @@ export const findUserWithPassword = async query => {
   return await UserModel.findOne(query).select("+password");
 };
 
+export const findUserAndDelete = async query => {
+  return await UserModel.findOneAndDelete(query);
+};
+
 //register new user in database
 export const createNewUser = async userData => {
   const hashed = await hashedPassword(userData.password);
   const newUser = new UserModel({
     ...userData,
-    password: hashed,
-    role: "USER",
   });
   return await newUser.save();
 };

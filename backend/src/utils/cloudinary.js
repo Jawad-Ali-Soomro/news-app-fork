@@ -2,6 +2,7 @@ import { v2 as cloudinary } from "cloudinary";
 import fs from "fs";
 import CustomError from "./ApiError.js";
 import { CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET, CLOUDINARY_NAME } from "../config/envManager.js";
+
 cloudinary.config({
   cloud_name: CLOUDINARY_NAME,
   api_key: CLOUDINARY_API_KEY,
@@ -16,7 +17,7 @@ export const uploadOnCloudinary = async localFilePath => {
     const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
-    // file has been upload process success full
+    // delete file from local server after upload
     fs.unlinkSync(localFilePath, err => {
       console.log(err);
     });

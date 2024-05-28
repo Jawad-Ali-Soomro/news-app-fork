@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import { SMTP_PASSWORD, SMTP_FROM_EMAIL, SMTP_FROM_NAME } from "../config/envManager.js";
+import { SMTP_PASSWORD, SMTP_FROM_EMAIL, SMTP_FROM_NAME, SMTP_USER } from "../config/envManager.js";
 import path from "path";
 import handlebars from "nodemailer-express-handlebars";
 
@@ -19,7 +19,7 @@ const transporterOptions = {
   service: "gmail",
   auth: {
     user: SMTP_FROM_EMAIL,
-    pass: SMTP_PASSWORD,
+    pass: "gbmo oswq vxtn quwo",
   },
 };
 
@@ -33,7 +33,7 @@ transporter.use("compile", handlebars(handlebarOptions));
 const sendEmail = async ({ sendTo, subject, template, context, attachments = [] }) => {
   try {
     const mailOptions = {
-      from: `${SMTP_FROM_NAME} <${SMTP_FROM_EMAIL}>`,
+      from: `<${SMTP_FROM_EMAIL}>`,
       to: "atifahmad2219@gmail.com",
       // to: sendTo,
       subject: subject,
