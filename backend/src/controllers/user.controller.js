@@ -72,12 +72,15 @@ export const updateAccountDetails = asyncHandler(async (req, res) => {
 export const changeUserAvatar = asyncHandler(async (req, res) => {
   const avatarLocalPath = req.file?.path;
   const userId = req.user?._id;
+  console.log(req.file);
   if (!avatarLocalPath) {
     throw new ApiError(400, "please upload Image to change the avatar ");
   }
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   const updatedUserDetails = await findUserAndUpdate({ _id: userId }, { avatar: avatar?.secure_url });
-
+  if (!updatedUserDetails) {
+    throw new ApiError(400, "Error while updating user avatar in database ");
+  }
   new ApiResponse(200, { avatar: updatedUserDetails.avatar }, "avatar has changed successfully ").send(res);
 });
 
@@ -89,7 +92,9 @@ export const changeUserCoverImage = asyncHandler(async (req, res) => {
   }
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
   const updatedUserDetails = await findUserAndUpdate({ _id: userId }, { coverImage: coverImage?.secure_url });
-
+  if (!updatedUserDetails) {
+    throw new ApiError(400, "Error while updating user coverImage in database ");
+  }
   new ApiResponse(200, { coverImage: updatedUserDetails.coverImage }, "coverImage has changed successfully ").send(res);
 });
 

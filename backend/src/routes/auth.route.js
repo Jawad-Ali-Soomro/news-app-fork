@@ -8,6 +8,7 @@ import {
   verifyAccount,
   forgotPassword,
   resetPassword,
+  resendVerificationEmail,
 } from "../controllers/auth.controller.js";
 import { authenticateUser } from "../middlewares/auth.middleware.js";
 
@@ -31,5 +32,7 @@ router.route("/verify-account").post(verifyAccount);
 router.route("/forgot-password").post(forgotPassword);
 
 router.route("/reset-password").post(resetPassword);
+
+router.route("/resend-verification-email").post(resendVerificationEmail);
 
 export default router;

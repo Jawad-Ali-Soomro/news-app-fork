@@ -99,6 +99,22 @@ export const verifyAccount = asyncHandler(async (req, res) => {
   return new ApiResponse(200, { user }, "user has verified succesfully now you can login ").send(res);
 });
 
+export const resendVerificationEmail = asyncHandler(async (req, res) => {
+  const { email } = req.body;
+  if (!emailPattern.test(email)) {
+    throw new ApiError(400, "Email should be valid");
+  }
+  const user = await findUser({ email });
+  if (!user) {
+    throw new ApiError(404, "your email not exists kindly register your account");
+  }
+  if (user.verified) {
+    throw new ApiError(409, "your account has already verified !");
+  }
+  await verificationEmail(user._id);
+  return new ApiResponse(200, {}, "verification email has resended you ").send(res);
+});
+
 export const forgotPassword = asyncHandler(async (req, res) => {
   const { email } = req.body;
   if (!emailPattern.test(email)) {

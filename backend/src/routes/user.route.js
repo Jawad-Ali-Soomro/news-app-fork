@@ -22,9 +22,9 @@ router.route("/user/:id").get(getUserById);
 
 router.route("/current-user").get(getCurrentUser);
 
-router.route("/change-password").put(changeCurrentUserPassword);
+router.route("/change-password").patch(changeCurrentUserPassword); // Changed to PATCH
 
-router.route("/update-account-details").put(updateAccountDetails);
+router.route("/update-account-details").put(updateAccountDetails); // Kept as PUT for full update
 
 router.route("/change-avatar").patch(upload.single("avatar"), changeUserAvatar);
 
