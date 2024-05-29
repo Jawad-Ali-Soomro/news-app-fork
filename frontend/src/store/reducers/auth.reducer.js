@@ -12,5 +12,8 @@ export const authReducer = {
     state.refreshToken = "";
     state.status = false;
   },
+  updateUserDetails: (state, action) => {
+    state.user = { ...state.user, ...action.payload };
+  },
   refresh: () => {},
 };

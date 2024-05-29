@@ -1,6 +1,7 @@
 import * as Yup from "yup";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Link } from "react-router-dom";
 import { userLoginSchema } from "../../schema/userSchema";
 import { Button } from "../../components/UI/button";
 import FormInput from "../../components/UI/FormInput";
@@ -31,7 +32,7 @@ function LoginPage() {
   };
 
   return (
-    <div className="flex justify-between items-center h-screen w-100">
+    <div className="flex justify-between bg-background items-center h-screen w-100">
       <div className="w-1/2 h-screen">
         <img
           src="https://images.unsplash.com/32/Mc8kW4x9Q3aRR3RkP5Im_IMG_4417.jpg?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGJhY2tncm91bmQlMjBpbWFnZXxlbnwwfHwwfHx8MA%3D%3D"
@@ -61,6 +62,15 @@ function LoginPage() {
           <Button type="submit" className="mt-2" loading={formState.isSubmitting}>
             Login Account
           </Button>
+          <div className="w-auto float-right my-7">
+            <Link className="my-5 text-blue-500 hover:underline">Forgot password ?</Link>
+          </div>
+          <p>
+            Don't have an account
+            <Link to="/auth/signUp" className="text-blue-600 ml-5 hover:underline">
+              SignUp
+            </Link>
+          </p>
         </form>
       </div>
     </div>

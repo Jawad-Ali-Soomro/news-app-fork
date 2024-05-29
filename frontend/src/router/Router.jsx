@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import ProtectedByUser from "./Protected/ProtectedByUser.jsx";
+import { AuthProtectedRoute, ProtectedByUser } from "./Protected/ProtectedByUser.jsx";
 import ProtectedByChannel from "./Protected/ProtectedByChannel.jsx";
 import CreateArticle from "../pages/Article/CreateArticle.jsx";
 import UpdateArticle from "../pages/Article/UpdateArticle.jsx";
@@ -21,20 +21,23 @@ import VerifyAccountPage from "../pages/VerifyAccount/VerifyAccountPage.jsx";
 import ForgotPasswordPage from "../pages/EditProfile/ForgotPasswordPage.jsx";
 import ResetPasswordPage from "../pages/EditProfile/ResetPasswordPage.jsx";
 
-//import all pages
 const Router = () => {
   // useAutoLogin();
   return (
     <Routes>
-      {/* common routes of App available of all */}
-      <Route exact path="/" element={<LandingPage />} />
-      <Route exact path="/auth/login" element={<LoginPage />} />
-      <Route exact path="/auth/signUp" element={<SignUpPage />} />
-      <Route exact path="/auth/verify-account" element={<VerifyAccountPage />} />
-      <Route exact path="/auth/forgot-password" element={<ForgotPasswordPage />} />
-      <Route exact path="/auth/reset-password" element={<ResetPasswordPage />} />
-      <Route exact path="/auth/channelRegister" element={<RegisterChannel />} />
-      {/* protected routes by login user */}
+        <Route exact path="/" element={<LandingPage />} />
+
+      {/* public routes available only when user not authenticated */}
+      <Route element={<AuthProtectedRoute />}>
+        <Route exact path="/auth/login" element={<LoginPage />} />
+        <Route exact path="/auth/signUp" element={<SignUpPage />} />
+        <Route exact path="/auth/verify-account" element={<VerifyAccountPage />} />
+        <Route exact path="/auth/forgot-password" element={<ForgotPasswordPage />} />
+        <Route exact path="/auth/reset-password" element={<ResetPasswordPage />} />
+        <Route exact path="/auth/channelRegister" element={<RegisterChannel />} />
+      </Route>
+
+      {/* protected routes for authenticated users */}
       <Route element={<ProtectedByUser />}>
         <Route exact path="/articles" element={<ArticleList />} />
         <Route exact path="/channels" element={<ChannelsList />} />
@@ -44,12 +47,12 @@ const Router = () => {
         <Route exact path="/saved" element={<Collection />} />
         <Route path="*" element={<NotFoundPage />} />
       </Route>
-      {/* protected routes by channels */}
+      {/* protected routes for channels only channels can access */}
       <Route element={<ProtectedByChannel />}>
         <Route exact path="/articles/create" element={<CreateArticle />} />
         <Route exact path="/articles/update/:id" element={<UpdateArticle />} />
       </Route>
-      {/* protected routes by admin or App owner */}
+      {/* protected routes for Admin only App admin can access */}
       <Route element={<ProtectedByAdmin />}>
         <Route exact path="/admin/dashboard" element={<DashBoard />} />
         <Route exact path="/admin/say" element={<>say hello from admin</>} />

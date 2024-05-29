@@ -39,7 +39,7 @@ const BottomBar = () => {
 
   return (
     <React.Fragment>
-      <div className="fixed bottom-0 left-0 w-full h-14 flex justify-between items-end text-gray-100 text-lg px-5 bg-gray-800 z-20">
+      <div className="fixed bottom-0 left-0 w-full h-14 sm:hidden flex justify-between items-end text-gray-100 text-lg px-5 bg-gray-800 z-20">
         {navIcons.map((icon) => {
           return (
             <NavLink

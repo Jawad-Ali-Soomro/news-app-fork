@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { Link } from "react-router-dom";
 import { userRegistrationSchema } from "../../schema/userSchema";
 import { Button } from "../../components/UI/button";
 import FormInput from "../../components/UI/FormInput";
@@ -92,6 +93,12 @@ function RegistrationPage() {
           <Button type="submit" className="mt-2" loading={formState.isSubmitting}>
             Register Account
           </Button>
+          <p>
+            Already have an account ?
+            <Link to="/auth/login" className="text-blue-600 ml-5">
+              Login
+            </Link>
+          </p>
         </form>
       </div>
     </div>

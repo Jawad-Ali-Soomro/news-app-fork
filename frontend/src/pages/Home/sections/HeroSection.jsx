@@ -3,28 +3,20 @@ import React from "react";
 const HeroSection = () => {
   return (
     <React.Fragment>
-      <motion.div
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <section className="px-2 py-32 bg-white md:px-0">
+      <motion.div initial={{ opacity: 0, y: 50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+        <section className="px-2 py-32 bg-background md:px-0">
           <div className="container items-center max-w-6xl px-8 mx-auto xl:px-5">
             <div className="flex flex-wrap items-center sm:-mx-3">
               <div className="w-full md:w-1/2 md:px-3">
                 <div className="w-full pb-6 space-y-6 sm:max-w-md lg:max-w-lg md:space-y-4 lg:space-y-8 xl:space-y-9 sm:pr-5 lg:pr-0 md:pb-0">
                   <h1 className="text-2xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-4xl lg:text-2xl xl:text-2xl">
-                    <p className="text-indigo-800">
-                      Discover the World through ArticleHub -
-                    </p>
+                    <p className="text-indigo-800">Discover the World through ArticleHub -</p>
                     Your Personalized News Experience
                   </h1>
                   <p className="mx-auto text-base text-gray-500 sm:max-w-md lg:text-xl md:max-w-3xl">
-                    Stay informed with the latest news from around the world.
-                    Our app brings you real-time updates on current events,
-                    politics, technology, entertainment, and more. Whether{" "}
-                    {"you're"} interested in global headlines or niche topics,
-                    ArticleHub has you covered.
+                    Stay informed with the latest news from around the world. Our app brings you real-time updates on
+                    current events, politics, technology, entertainment, and more. Whether {"you're"} interested in
+                    global headlines or niche topics, ArticleHub has you covered.
                   </p>
                   <div className="relative flex flex-col sm:flex-row sm:space-x-4">
                     <button className="flex items-center w-full px-6 py-3 mb-3 text-lg text-white bg-indigo-600 rounded-md sm:mb-0 hover:bg-indigo-700 sm:w-auto">

@@ -5,35 +5,31 @@ import { logoutUser } from "../../api/auth";
 import { toast } from "react-toastify";
 import { logout } from "../../store/slices/auth.slice";
 import { Button } from "../UI/button";
+import { postRequest } from "../../api/apiServices";
+import ProfileMenu from "./ProfileMenu";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const authStatus = useSelector((state) => state.auth.status);
-  const handleLogout = async () => {
-    const response = await logoutUser();
-    if (!response) return;
-    dispatch(logout());
-    toast(response?.data?.message);
-    navigate("/");
-  };
+
   return (
     <React.Fragment>
-      <div className="w-full bg-gray-800 h-12 shadow-md flex justify-between px-4 items-center">
+      <div className="w-full bg-background/30 backdrop-blur-md  border-b h-14 shadow-md flex justify-between px-4 py-2 items-center text-foreground sticky z-50 top-0 mt-0">
         <div className="flex items-center">
           <img
             className="h-[100%] w-[50px]"
             src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
             alt=""
           />
-          <h5 className="text-white">ArticleHub</h5>
+          <h5 className="">ArticleHub</h5>
         </div>
         <div className="flex gap-3">
           {!authStatus ? (
             <div className="flex gap-1">
               <Button
                 className="w-fit px-2 py-2"
-                variant={"primary"}
+                variant={"outline"}
                 isLoading={false}
                 onClick={() => navigate("/auth/signUp")}
               >
@@ -41,30 +37,15 @@ const Navbar = () => {
               </Button>
               <Button
                 className="w-fit px-2 py-2"
-                variant={"primary"}
+                variant={"default"}
                 isLoading={false}
                 onClick={() => navigate("/auth/login")}
               >
                 Sign In
               </Button>
-              <Button
-                className="w-fit px-2 py-2"
-                variant={"success"}
-                isLoading={false}
-                onClick={() => navigate("/auth/channelRegister")}
-              >
-                Join As Channel
-              </Button>
             </div>
           ) : (
-            <Button
-              className="w-fit px-2 py-2"
-              variant={"success"}
-              isLoading={false}
-              onClick={handleLogout}
-            >
-              Logout
-            </Button>
+            <ProfileMenu />
           )}
         </div>
       </div>

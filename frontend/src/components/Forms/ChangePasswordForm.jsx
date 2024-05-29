@@ -1,17 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 import { changePasswordSchema } from "../../schema/userSchema";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
 import FormInput from "../UI/FormInput";
+import { patchRequest, postRequest, putRequest } from "../../api/apiServices.js";
 import { Button } from "../UI/button";
 
 const ChangePasswordForm = () => {
+  const [errorMessage, setErrorMessage] = useState("");
   const { register, handleSubmit, formState } = useForm({
     resolver: yupResolver(changePasswordSchema),
   });
 
-  const submitHandler = (data) => {
+  const submitHandler = async (data) => {
     console.log(data);
+    const response = await patchRequest("/api/v1/users/change-password", data);
+    if (!response.success) return setErrorMessage(response.message);
   };
 
   return (
@@ -20,16 +24,30 @@ const ChangePasswordForm = () => {
       <FormInput
         {...register("currentPassword")}
         placeholder={"John_19"}
+        type="password"
         label={"Current Password "}
         error={formState.errors.currentPassword}
       />
       <FormInput
         {...register("newPassword")}
         placeholder={"John_19"}
+        type="password"
         label={"New Password "}
         error={formState.errors.newPassword}
       />
-      <Button>Change Password</Button>
+      <FormInput
+        {...register("confirmPassword")}
+        placeholder={"John_19"}
+        type="password"
+        label={"Confirm Password"}
+        error={formState.errors.confirmPassword}
+      />
+      <div className="my-5">
+        <p className="text-red-500">{errorMessage}</p>
+      </div>
+      <Button type="submit" loading={formState.isSubmitting}>
+        Change Password
+      </Button>
     </form>
   );
 };

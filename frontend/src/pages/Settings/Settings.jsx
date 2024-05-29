@@ -12,6 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import ChangePasswordForm from "../../components/Forms/ChangePasswordForm";
 import UpdateAccountForm from "../../components/Forms/UpdateAccountForm";
 import ChangeAvatarForm from "../../components/Forms/ChangeAvatarForm";
+import Navbar from "../../components/Navbar/Navbar";
 import ChangeCoverImageForm from "../../components/Forms/ChangeCoverImageForm";
 
 const SettingsPage = () => {
@@ -20,16 +21,17 @@ const SettingsPage = () => {
 
   return (
     <React.Fragment>
-      <BackBar pageLabel={"Settings"} />
-      <div className="w-100 flex justify-center mt-5">
-        <Tabs defaultValue="account" className="w-[400px]">
-          <TabsList className="flex gap-4">
+      <Navbar />
+
+      <div className="w-100 flex justify-center mt-5 bg-background">
+        <Tabs defaultValue="account" className="w-auto">
+          <TabsList className="flex bg-transparent gap-4">
             <TabsTrigger value="account">Update Account Details </TabsTrigger>
             <TabsTrigger value="password">Change Password</TabsTrigger>
             <TabsTrigger value="change-avatar">Change Avatar Image </TabsTrigger>
             <TabsTrigger value="change-coverImage">Change Cover Image </TabsTrigger>
           </TabsList>
-          <TabsContent value="password" className="mt-10">
+          <TabsContent value="password" className="">
             <ChangePasswordForm />
           </TabsContent>
           <TabsContent value="account">

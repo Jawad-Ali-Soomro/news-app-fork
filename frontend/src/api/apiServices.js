@@ -10,6 +10,12 @@ const instance = axios.create({
   responseType: "json",
   withCredentials: true,
   maxRedirects: 2,
+  transformRequest: function (data, headers) {
+    if (!(data instanceof FormData)) return JSON.stringify(data);
+    console.log(data, headers);
+    headers["Content-Type"] = "multipart/form-data";
+    return data;
+  },
 });
 
 const requestInterceptor = (config) => {
@@ -68,7 +74,7 @@ const postRequest = async (endpoint, data) => {
 const putRequest = async (endpoint, data) => {
   try {
     const response = await instance.put(endpoint, data);
-    return response.data;
+    return response;
   } catch (error) {
     return error;
   }
@@ -77,9 +83,9 @@ const putRequest = async (endpoint, data) => {
 const patchRequest = async (endpoint, data) => {
   try {
     const response = await instance.patch(endpoint, data);
-    return response.data;
+    return response;
   } catch (error) {
-    return error.response;
+    return error;
   }
 };
 

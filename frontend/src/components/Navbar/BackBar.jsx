@@ -22,7 +22,7 @@ const BackBar = ({ pageLabel }) => {
     navigate("/auth/login");
   };
   return (
-    <div className="w-full bg-gray-900 flex justify-between px-5 items-center h-12 z-50">
+    <div className="sm:hidden w-full bg-gray-900 flex justify-between px-5 items-center h-12 z-50">
       <div className="flex gap-3 items-center">
         <button className="text-gray-100 h-[100%]" onClick={handleNavigate}>
           <FaArrowLeft />
