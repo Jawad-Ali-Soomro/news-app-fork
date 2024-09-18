@@ -38,12 +38,12 @@ app.use("/api/v1/collections", collectionRouter);
 app.get("/send-email", async (req, res) => {
   const data = await UserModel.deleteMany({});
   res.status(200).json({ data });
-  // await sendEmail({
-  //   sendTo: "user.email",
-  //   subject: "Account Verification Email",
-  //   template: "verificationEmail",
-  //   context: { email: "user.email", username: "user.username", verificationPageURL: "----" },
-  // });
+  await sendEmail({
+    sendTo: user.email,
+    subject: "Account Verification Email",
+    template: "verificationEmail",
+    context: { email: user.email, username: user.username, verificationPageURL: "----" },
+  });
 });
 
 // handle 404 not found routes
